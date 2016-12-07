@@ -1,5 +1,7 @@
+//"Domain object" to represent a player (object to store player data)
 package edu.example;
 
+//Java Persistence API
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -15,17 +17,18 @@ public class Player {
 
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
+    //Properties
     private long id;
     private String firstName;
     private String lastName;
-
-    public Player() { }
-
+    //NOTE Default Constructor http://stackoverflow.com/questions/4488716/java-default-constructor
+    public Player () {}
+    //Constructor
     public Player(String first, String last) {
         this.firstName = first;
         this.lastName = last;
     }
-    //getters and setters
+    //Methods getters and setters
     public String getFirstName() {
         return firstName;
     }
