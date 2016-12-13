@@ -27,7 +27,8 @@ $(function() {
        }
      }
 
-  // code to post a new player using AJAX
+  // Code to post a new player using AJAX to the backend. On the back end
+  // the Java application has a Person class to hold that data
   // on success, reload and data from server
   function postPlayer(firstName, lastName) {
     $.post({
