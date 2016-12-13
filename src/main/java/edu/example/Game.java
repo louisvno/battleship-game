@@ -5,7 +5,6 @@ package edu.example;
  */
 //Java Persistence API
         import java.time.LocalDateTime;
-        import java.util.Date;
         import javax.persistence.Entity;
         import javax.persistence.GeneratedValue;
         import javax.persistence.GenerationType;
@@ -18,17 +17,17 @@ public class Game {
     @GeneratedValue(strategy=GenerationType.AUTO)
     //Properties
     private long id;
-    private LocalDateTime creationDate;
+    private String creationDate;
     //NOTE Default Constructor http://stackoverflow.com/questions/4488716/java-default-constructor
     public Game () {}
 
     //Methods getters and setters
     public String getCreationDate() {
-        return creationDate.toString();
+        return creationDate;
     }
 
     public void setCreationDate() {
-        this.creationDate = LocalDateTime.now();
+        this.creationDate = LocalDateTime.now().toString();
     }
 
     public String toString() {
