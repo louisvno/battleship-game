@@ -6,6 +6,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 //application context object = interface, does everything that the beanfactory does and more
 import org.springframework.context.annotation.Bean;
 
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+
 @SpringBootApplication
 public class SalvoApplication {
 
@@ -18,15 +21,24 @@ public class SalvoApplication {
     //the initData() method in the CommandLineRunner will need an instance of a PlayerRepository
     // Spring, as needed, will create an instance of a RestRepository and use it wherever one
     // is asked for.
-	public CommandLineRunner initData(PlayerRepository repository) {
+	public CommandLineRunner initData(
+			PlayerRepository players,
+			GameRepository games,
+			GamePlayerRepository gameplayers) {
 
 		return (args) -> {
-//			save a couple of Players
-			repository.save(new Player("Jack", "Bauer"));
-			repository.save(new Player("Chloe", "O'Brian"));
-			repository.save(new Player("Kim", "Bauer"));
-			repository.save(new Player("David", "Palmer"));
-			repository.save(new Player("Michelle", "Dessler"));
+			Player p1 = new Player ("Arnie" , "Schwarz");
+            //save a couple of Players
+			players.save(p1);
+
+			Game g1 = new Game ();
+            //save a a new game
+            games.save(g1);
+
+            gameplayers.save(new GamePlayer(p1,g1));
+
+
 		};
 	}
+
 }

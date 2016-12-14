@@ -1,0 +1,82 @@
+package edu.example;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.FetchType;
+import java.time.*;
+
+
+/**
+ * Created by louis on 12/13/2016.
+ */
+
+//A game can have multiple players and a player can be in multiple games
+//The GamePlayer table associates the players to their games
+// Because game and player are references to objects stored in other data tables,
+// you need to add JPA annotations to tell JPA how to connect the tables together.
+
+
+/*For each row of the pet database table, include a column owner_id with the ID of the owner of the pet.
+Given a pet, you can get the owner by retrieving the person with the stored owner_id.
+Given a person, you can get all that person's pets by collecting all the rows of the pet table that have that person's ID in the owner_id column.
+
+In JPA, we do this by
+
+
+annotating this field with JPA to link it to the data table
+define getOwner()  and setOwner() methods */
+
+@Entity
+public class GamePlayer {
+
+    @Id
+    @GeneratedValue(strategy= GenerationType.AUTO)
+    //Properties
+    private long id;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name="player_id")
+    private Player player;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name="game_id")
+    private Game game;
+
+    private LocalDateTime joinDate;
+    //NOTE Default Constructor http://stackoverflow.com/questions/4488716/java-default-constructor
+
+    public GamePlayer () {}
+
+    public GamePlayer (Player player, Game game) {
+        this.player = player;
+        this.game = game;
+        this.joinDate = LocalDateTime.now();
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
+
+    public Game getGame() {
+        return game;
+    }
+
+    public void setGame(Game game) {
+        this.game = game;
+    }
+
+    public void setJoinDate(LocalDateTime joinDate){
+        this.joinDate = joinDate;
+    }
+
+    public LocalDateTime getJoinDate() {
+        return joinDate;
+    }
+
+}

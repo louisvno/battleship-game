@@ -6,6 +6,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.FetchType;
+import java.util.List;
 
 /**
  * Created by louis on 12/5/2016.
@@ -20,11 +23,15 @@ public class Player {
     private long id;
     private String firstName;
     private String lastName;
+    //one player can have many gameplayers
+    @OneToMany(mappedBy = "player", fetch = FetchType.EAGER)
+    private List <GamePlayer> gamePlayers;
+
     //NOTE Default Constructor http://stackoverflow.com/questions/4488716/java-default-constructor
     //Needed for deserialization (process of converting a JSON obj to an instance of a Java class)
 
     //Algorithm Jackson calls new Player() to create an empty instance p1 of Player.
-    //For each key and value in obj (JSON), Jackson calls p1.setFirstName(value) or
+    //For each key and value in obj (JSON), Jackson calls Setters e.g p1.setFirstName(value) or
     // p1.firstName = value, whichever of these is public.
 
     //This process will break if there is no no-argument constructor,
@@ -44,8 +51,8 @@ public class Player {
     }
 
     public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
+            this.firstName = firstName;
+        }
 
     public String getLastName() {
         return lastName;
@@ -54,6 +61,7 @@ public class Player {
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
+
 
     public String toString() {
         return (firstName + " " + lastName);
