@@ -78,5 +78,8 @@ public class GamePlayer {
     public LocalDateTime getJoinDate() {
         return joinDate;
     }
+    public long getId() {
+        return id;
+    }
 
 }

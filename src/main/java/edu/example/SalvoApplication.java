@@ -27,15 +27,26 @@ public class SalvoApplication {
 			GamePlayerRepository gameplayers) {
 
 		return (args) -> {
+			//create a few players
 			Player p1 = new Player ("Arnie" , "Schwarz");
-            //save a couple of Players
+			Player p2 = new Player ("Silvester" , "Stallone");
+			Player p3 = new Player ("Jean Claude" , "Vandamme");
+            //save the Players
 			players.save(p1);
-
+			players.save(p2);
+			players.save(p3);
+			//create a few games
 			Game g1 = new Game ();
-            //save a a new game
+			Game g2 = new Game ();
+			Game g3 = new Game ();
+            //save games
             games.save(g1);
-
+            games.save(g2);
+            games.save(g3);
+			//save some gameplayers
             gameplayers.save(new GamePlayer(p1,g1));
+            gameplayers.save(new GamePlayer(p2,g2));
+            gameplayers.save(new GamePlayer(p3,g3));
 
 
 		};

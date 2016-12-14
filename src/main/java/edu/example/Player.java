@@ -62,7 +62,9 @@ public class Player {
         this.lastName = lastName;
     }
 
-
+    public long getId() {
+        return id;
+    }
     public String toString() {
         return (firstName + " " + lastName);
     }

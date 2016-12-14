@@ -48,4 +48,10 @@ public class Game {
     public String toString() {
         return ("game created at " + creationDate);
     }
+
+    public long getId() {
+        return id;
+    }
+
+
 }
