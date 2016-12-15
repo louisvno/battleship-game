@@ -36,6 +36,7 @@ public class SalvoApplication {
 			players.save(p2);
 			players.save(p3);
 			//create a few games
+			//TODO make time difference
 			Game g1 = new Game ();
 			Game g2 = new Game ();
 			Game g3 = new Game ();
@@ -47,6 +48,7 @@ public class SalvoApplication {
             gameplayers.save(new GamePlayer(p1,g1));
             gameplayers.save(new GamePlayer(p2,g2));
             gameplayers.save(new GamePlayer(p3,g3));
+            gameplayers.save(new GamePlayer(p2,g3));
 
 
 		};

@@ -5,6 +5,7 @@ package edu.example;
  */
 //Java Persistence API
 
+        import java.text.SimpleDateFormat;
         import java.time.LocalDateTime;
         import java.time.ZonedDateTime;
         import javax.persistence.Entity;
@@ -13,7 +14,9 @@ package edu.example;
         import javax.persistence.Id;
         import javax.persistence.OneToMany;
         import javax.persistence.FetchType;
+        import java.util.Date;
         import java.util.List;
+        import java.util.Locale;
 
 @Entity
 public class Game {
@@ -23,25 +26,34 @@ public class Game {
 
     //Properties
     private long id;
-    private LocalDateTime creationDate;
+    private Date creationDate;
+    //private Date today = new Date();
+    //SimpleDateFormat sdf = new SimpleDateFormat("EEEE, MMMM d, yyyy 'at' h:mm a", Locale.ENGLISH);
+    //String formattedDate = sdf.format(today);
+
 
     //one Game can have many gameplayers
-    @OneToMany(mappedBy="player", fetch=FetchType.EAGER)
+    @OneToMany(mappedBy="game", fetch=FetchType.EAGER)
     public List <GamePlayer> gamePlayers;
 
     //constructors
     //public Game () {}
 
     public Game () {
-        this.creationDate = LocalDateTime.now();
+        this.creationDate = new Date();
+
     }
 
     //Methods getters and setters
-    public LocalDateTime getCreationDate() {
+    public List <GamePlayer> getGamePlayers (){
+        return gamePlayers;
+    }
+
+    public Date getCreationDate() {
         return creationDate;
     }
     //Is this needed??
-    public void setCreationDate(LocalDateTime creationDate) {
+    public void setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
     }
 
