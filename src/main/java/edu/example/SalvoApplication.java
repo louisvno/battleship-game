@@ -24,7 +24,8 @@ public class SalvoApplication {
 	public CommandLineRunner initData(
 			PlayerRepository players,
 			GameRepository games,
-			GamePlayerRepository gameplayers) {
+			GamePlayerRepository gameplayers,
+			ShipRepository ships) {
 
 		return (args) -> {
 			//create a few players
@@ -44,12 +45,31 @@ public class SalvoApplication {
             games.save(g1);
             games.save(g2);
             games.save(g3);
-			//save some gameplayers
-            gameplayers.save(new GamePlayer(p1,g1));
-            gameplayers.save(new GamePlayer(p2,g2));
-            gameplayers.save(new GamePlayer(p3,g3));
-            gameplayers.save(new GamePlayer(p2,g3));
+			//create some gameplayers
+			GamePlayer gp1 = new GamePlayer(p1,g1);
+			GamePlayer gp2 = new GamePlayer(p2,g2);
+			GamePlayer gp3 = new GamePlayer(p3,g3);
+			GamePlayer gp4 = new GamePlayer(p2,g3);
 
+//            //create some ships
+//			Ship ship1 = new Ship();
+//			Ship ship2 = new Ship();
+//			Ship ship3 = new Ship();
+//
+//            gp1.addShip(ship1);
+//            gp2.addShip(ship2);
+//            gp2.addShip(ship3);
+//
+//			//save ships
+//			ships.save(ship1);
+//			ships.save(ship2);
+//			ships.save(ship3);
+//
+            //save some gameplayers
+            gameplayers.save(gp1);
+            gameplayers.save(gp2);
+            gameplayers.save(gp3);
+            gameplayers.save(gp4);
 
 		};
 	}

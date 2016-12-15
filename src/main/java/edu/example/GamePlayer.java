@@ -1,13 +1,8 @@
 package edu.example;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.FetchType;
+import javax.persistence.*;
 import java.time.*;
+import java.util.List;
 
 
 /**
@@ -38,12 +33,13 @@ public class GamePlayer {
     //Properties
     private long id;
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="player_id")
+    @JoinColumn(name="player")
     private Player player;
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="game_id")
+    @JoinColumn(name="game")
     private Game game;
-
+    @OneToMany(mappedBy="gamePlayer",fetch = FetchType.EAGER)
+    private List <Ship> ships;
     private LocalDateTime joinDate;
     //NOTE Default Constructor http://stackoverflow.com/questions/4488716/java-default-constructor
 
@@ -73,6 +69,10 @@ public class GamePlayer {
 
     public void setJoinDate(LocalDateTime joinDate){
         this.joinDate = joinDate;
+    }
+
+    public void addShip(Ship ship){
+        this.ships.add(ship);
     }
 
     public LocalDateTime getJoinDate() {
