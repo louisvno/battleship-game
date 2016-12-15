@@ -8,7 +8,9 @@
 </head>
 <body ng-controller = "viewController">
     <ol>
-        <li ng-repeat="game in games">{{game.created}}<span ng-repeat="gamePlayer in game.gamePlayers">,{{gamePlayer.player.firstName}}</span></li>
+        <li ng-repeat="game in games">
+            {{game.created}}<span ng-repeat="gamePlayer in game.gamePlayers">,{{gamePlayer.player.firstName}}</span>
+        </li>
     </ol>
 </body>
 </html>
