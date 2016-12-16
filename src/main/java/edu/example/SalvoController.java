@@ -9,16 +9,17 @@ import java.util.List;
 import java.util.Map;
 import static java.util.stream.Collectors.toList;
 
-
-
 /**
  * Created by louis on 12/14/2016.
  */
+
 @RestController
 @RequestMapping("/api")
 public class SalvoController {
     @Autowired
     private GameRepository games;
+    @Autowired
+    private GamePlayerRepository gamePlayers;
 
     @RequestMapping("/games")
     public List<Object> getAllGames() {
@@ -28,6 +29,14 @@ public class SalvoController {
                         .map(game -> makeGameDTO(game))
                         .collect(toList());
     }
+
+    @RequestMapping("/game_view/{gamePlayerId}")
+    public Object mapGameByGamePlayerId(@PathVariable Long gamePlayerId) {
+        //findOne() returns the instance of gamePlayer with the ID that you pass as parameter
+        return makeGameDTO(gamePlayers.findOne(gamePlayerId).getGame());
+    }
+
+
     //DTO = Data transfer object
     // = decide from your class which data do you want to send in you JSON
     private Map<String, Object> makeGameDTO(Game game) {
@@ -65,14 +74,5 @@ public class SalvoController {
         return dto;
     }
 
-    @RequestMapping("/game_view/{gamePlayerId}")
-
-    public List<Object> getGame(@PathVariable Long gamePlayerId) {
-        //findAll() returns the list of games instances
-        return
-                games.findAll().stream()
-                        .map(game -> makeGameDTO(game))
-                        .collect(toList());
-    }
 
 }
