@@ -9,7 +9,7 @@ function viewController($http, $scope) {
 
   $http.get("/api/games")
      .then(function(response) {
-        tempGames = angular.fromJson(response.data);
+        tempGames = response.data;
         tempGames.forEach (function(game){
             game.created = getDate(game.created);
         })

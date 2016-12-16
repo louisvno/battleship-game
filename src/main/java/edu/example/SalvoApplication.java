@@ -8,6 +8,8 @@ import org.springframework.context.annotation.Bean;
 
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @SpringBootApplication
 public class SalvoApplication {
@@ -50,20 +52,45 @@ public class SalvoApplication {
 			GamePlayer gp2 = new GamePlayer(p2,g2);
 			GamePlayer gp3 = new GamePlayer(p3,g3);
 			GamePlayer gp4 = new GamePlayer(p2,g3);
+			//create some ship types
+			String type1 = "destroyer";
+			String type2 = "submarine";
+			String type3 = "titanic";
+			String type4 = "black pearl";
+			//TODO add Gameplayer to ship as currently the ships dont have a gameplayer assigned
+			// TODO (cont')  therefore the database cannot find the ship corresponding to the gampelayer
+
+			//create some ship locations
+			List<String> loc1 = new ArrayList<>();
+			List<String> loc2 = new ArrayList<>();
+			List<String> loc3 = new ArrayList<>();
+			loc1.add("H1");
+			loc1.add("H2");
+			loc2.add("H3");
+			loc2.add("H4");
+			loc3.add("H5");
+			loc3.add("H6");
+			loc3.add("H7");
+			loc3.add("H8");
 
             //create some ships
-			Ship ship1 = new Ship();
-			Ship ship2 = new Ship();
-			Ship ship3 = new Ship();
-
-            gp1.addShip(ship1);
-            gp2.addShip(ship2);
-            gp2.addShip(ship3);
-
+			Ship ship1 = new Ship(type1,loc1);
+			Ship ship2 = new Ship(type2,loc2);
+			Ship ship3 = new Ship(type4,loc3);
 			//save ships
 			ships.save(ship1);
 			ships.save(ship2);
 			ships.save(ship3);
+
+			gp1.addShip(ship1);
+			gp1.addShip(ship1);
+            gp2.addShip(ship2);
+            gp2.addShip(ship3);
+			gp3.addShip(ship2);
+            gp3.addShip(ship3);
+            gp4.addShip(ship2);
+            gp4.addShip(ship3);
+
 
             //save some gameplayers
             gameplayers.save(gp1);

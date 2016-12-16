@@ -84,4 +84,11 @@ public class GamePlayer {
         return id;
     }
 
+    public List<Ship> getShips() {
+        return ships;
+    }
+
+    public void setShips(List<Ship> ships) {
+        this.ships = ships;
+    }
 }

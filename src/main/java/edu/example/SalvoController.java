@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collector;
+
 import static java.util.stream.Collectors.toList;
 
 /**
@@ -22,7 +24,7 @@ public class SalvoController {
     private GamePlayerRepository gamePlayers;
 
     @RequestMapping("/games")
-    public List<Object> getAllGames() {
+    private List<Object> mapAllGames() {
         //findAll() returns the list of games instances
         return
                 games.findAll().stream()
@@ -31,11 +33,35 @@ public class SalvoController {
     }
 
     @RequestMapping("/game_view/{gamePlayerId}")
-    public Object mapGameByGamePlayerId(@PathVariable Long gamePlayerId) {
+    private Object mapGameByGamePlayerId(@PathVariable Long gamePlayerId) {
         //findOne() returns the instance of gamePlayer with the ID that you pass as parameter
-        return makeGameDTO(gamePlayers.findOne(gamePlayerId).getGame());
+        GamePlayer gamePlayer = gamePlayers.findOne(gamePlayerId);
+        Game game = gamePlayer.getGame();
+        Map gamePlayerMap = makeGameDTO(game);
+            gamePlayerMap.putAll(makeShipsDTO(gamePlayer));
+
+        return gamePlayerMap;
     }
 
+    private Map<String, Object> makeShipsDTO(GamePlayer gamePlayer){
+        Map<String, Object> dto = new LinkedHashMap<>();
+        dto.put("ships", mapShipsFromGamePlayer(gamePlayer));
+        return dto;
+    }
+
+    private List<Object> mapShipsFromGamePlayer(GamePlayer gamePlayer){
+        return
+             gamePlayer.getShips().stream()
+                .map(ship -> makeShipDataDTO(ship))
+                .collect(toList());
+    }
+
+    private Map<String, Object> makeShipDataDTO(Ship ship){
+        Map<String, Object> dto = new LinkedHashMap<>();
+        dto.put("locations", ship.getShipLocations());
+        dto.put("types", ship.getShipType());
+        return dto;
+    }
 
     //DTO = Data transfer object
     // = decide from your class which data do you want to send in you JSON
@@ -44,11 +70,12 @@ public class SalvoController {
         dto.put("id", game.getId());
         dto.put("created", game.getCreationDate());
         dto.put("gamePlayers", mapGamePlayersFromGame(game)); //add method that returns Gameplayers
+
         return dto;
     }
     //Because every Game instance has a list of GamePlayers
     //you can map the GamePlayers by getting this list
-    public List<Object> mapGamePlayersFromGame(Game game) {
+    private List<Object> mapGamePlayersFromGame(Game game) {
         return
                 game.getGamePlayers().stream()
                         .map(gamePlayer -> makeGamePlayerDTO(gamePlayer))
@@ -62,7 +89,7 @@ public class SalvoController {
            dto.put("player", mapPlayerFromGamePlayer(gamePlayer));
         return dto;
     }
-    public Object mapPlayerFromGamePlayer(GamePlayer gameplayer) {
+    private Object mapPlayerFromGamePlayer(GamePlayer gameplayer) {
         //List<Object> list = new ArrayList <>();
         return makePlayerDTO(gameplayer.getPlayer());
     }
