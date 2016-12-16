@@ -1,10 +1,9 @@
 package edu.example;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,16 +28,18 @@ public class SalvoController {
                         .map(game -> makeGameDTO(game))
                         .collect(toList());
     }
-
+    //DTO = Data transfer object
+    // = decide from your class which data do you want to send in you JSON
     private Map<String, Object> makeGameDTO(Game game) {
         Map<String, Object> dto = new LinkedHashMap<>();
         dto.put("id", game.getId());
         dto.put("created", game.getCreationDate());
-        dto.put("gamePlayers", getGameplayersFromGame(game)); //add method that returns Gameplayers
+        dto.put("gamePlayers", mapGamePlayersFromGame(game)); //add method that returns Gameplayers
         return dto;
     }
-    //from the game return a list of gameplayers
-    public List<Object> getGameplayersFromGame(Game game) {
+    //Because every Game instance has a list of GamePlayers
+    //you can map the GamePlayers by getting this list
+    public List<Object> mapGamePlayersFromGame(Game game) {
         return
                 game.getGamePlayers().stream()
                         .map(gamePlayer -> makeGamePlayerDTO(gamePlayer))
@@ -49,12 +50,11 @@ public class SalvoController {
     private Map<String, Object> makeGamePlayerDTO(GamePlayer gamePlayer) {
         Map<String, Object> dto = new LinkedHashMap<>();
            dto.put("id", gamePlayer.getId());
-           dto.put("player", getPlayerFromGamePlayer(gamePlayer));
+           dto.put("player", mapPlayerFromGamePlayer(gamePlayer));
         return dto;
     }
-    public Object getPlayerFromGamePlayer(GamePlayer gameplayer) {
+    public Object mapPlayerFromGamePlayer(GamePlayer gameplayer) {
         //List<Object> list = new ArrayList <>();
-
         return makePlayerDTO(gameplayer.getPlayer());
     }
 
@@ -63,6 +63,16 @@ public class SalvoController {
            dto.put("id", player.getId());
            dto.put("firstName", player.getFirstName());
         return dto;
+    }
+
+    @RequestMapping("/game_view/{gamePlayerId}")
+
+    public List<Object> getGame(@PathVariable Long gamePlayerId) {
+        //findAll() returns the list of games instances
+        return
+                games.findAll().stream()
+                        .map(game -> makeGameDTO(game))
+                        .collect(toList());
     }
 
 }
