@@ -2,7 +2,6 @@ package edu.example;
 
 import javax.persistence.*;
 import java.time.*;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -50,7 +49,6 @@ public class GamePlayer {
         this.player = player;
         this.game = game;
         this.joinDate = LocalDateTime.now();
-        this.ships = new ArrayList<Ship>();
     }
 
     public Player getPlayer() {
