@@ -25,9 +25,10 @@ public class Ship {
     public Ship (){
 
     }
-    public Ship (String type, List locations){
+    public Ship (String type, List locations, GamePlayer gamePlayer){
         this.shipType = type;
         this.shipLocations = locations;
+        this.gamePlayer = gamePlayer;
     }
 
     //methods

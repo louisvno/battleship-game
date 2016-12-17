@@ -52,6 +52,11 @@ public class SalvoApplication {
 			GamePlayer gp2 = new GamePlayer(p2,g2);
 			GamePlayer gp3 = new GamePlayer(p3,g3);
 			GamePlayer gp4 = new GamePlayer(p2,g3);
+            //save some gameplayers
+            gameplayers.save(gp1);
+            gameplayers.save(gp2);
+            gameplayers.save(gp3);
+            gameplayers.save(gp4);
 			//create some ship types
 			String type1 = "destroyer";
 			String type2 = "submarine";
@@ -74,29 +79,28 @@ public class SalvoApplication {
 			loc3.add("H8");
 
             //create some ships
-			Ship ship1 = new Ship(type1,loc1);
-			Ship ship2 = new Ship(type2,loc2);
-			Ship ship3 = new Ship(type4,loc3);
-			//save ships
-			ships.save(ship1);
-			ships.save(ship2);
-			ships.save(ship3);
+			Ship ship1 = new Ship(type1,loc1,gp1);
+			Ship ship2 = new Ship(type2,loc2,gp1);
+			Ship ship3 = new Ship(type4,loc3,gp2);
+			Ship ship4 = new Ship(type4,loc3,gp2);
+			Ship ship5 = new Ship(type4,loc3,gp3);
+			Ship ship6 = new Ship(type4,loc3,gp4);
 
-			gp1.addShip(ship1);
-			gp1.addShip(ship1);
-            gp2.addShip(ship2);
-            gp2.addShip(ship3);
-			gp3.addShip(ship2);
-            gp3.addShip(ship3);
-            gp4.addShip(ship2);
-            gp4.addShip(ship3);
+            //save ships
+            ships.save(ship1);
+            ships.save(ship2);
+            ships.save(ship3);
+            ships.save(ship4);
+            ships.save(ship5);
+            ships.save(ship6);
 
 
-            //save some gameplayers
-            gameplayers.save(gp1);
-            gameplayers.save(gp2);
-            gameplayers.save(gp3);
-            gameplayers.save(gp4);
+
+
+
+
+
+
 
 		};
 	}

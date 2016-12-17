@@ -50,7 +50,7 @@ public class GamePlayer {
         this.player = player;
         this.game = game;
         this.joinDate = LocalDateTime.now();
-        this.ships = new ArrayList<Ship>();
+
     }
 
     public Player getPlayer() {
@@ -71,10 +71,6 @@ public class GamePlayer {
 
     public void setJoinDate(LocalDateTime joinDate){
         this.joinDate = joinDate;
-    }
-
-    public void addShip(Ship ship){
-        this.ships.add(ship);
     }
 
     public LocalDateTime getJoinDate() {
