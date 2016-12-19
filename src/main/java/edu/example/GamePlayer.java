@@ -3,7 +3,9 @@ package edu.example;
 import javax.persistence.*;
 import java.time.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -40,7 +42,7 @@ public class GamePlayer {
     @JoinColumn(name="game")
     private Game game;
     @OneToMany(mappedBy="gamePlayer",fetch = FetchType.EAGER)
-    private List <Ship> ships;
+    private Set<Ship> ships;
     private LocalDateTime joinDate;
     //NOTE Default Constructor http://stackoverflow.com/questions/4488716/java-default-constructor
 
@@ -50,6 +52,7 @@ public class GamePlayer {
         this.player = player;
         this.game = game;
         this.joinDate = LocalDateTime.now();
+        this.ships = new HashSet<>();
 
     }
 
@@ -80,11 +83,17 @@ public class GamePlayer {
         return id;
     }
 
-    public List<Ship> getShips() {
+    public Set<Ship> getShips() {
         return ships;
     }
 
-    public void setShips(List<Ship> ships) {
+    public void setShips(Set<Ship> ships) {
         this.ships = ships;
+    }
+
+    //TODO ask Ferran for alternative method to connect gameplayer and ships
+    public void addShip(Ship ship) {
+        ship.setGamePlayer(this);
+        this.ships.add(ship);
     }
 }

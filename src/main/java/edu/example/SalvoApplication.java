@@ -52,18 +52,18 @@ public class SalvoApplication {
 			GamePlayer gp2 = new GamePlayer(p2,g2);
 			GamePlayer gp3 = new GamePlayer(p3,g3);
 			GamePlayer gp4 = new GamePlayer(p2,g3);
-            //save some gameplayers
-            gameplayers.save(gp1);
-            gameplayers.save(gp2);
-            gameplayers.save(gp3);
-            gameplayers.save(gp4);
+			//save some gameplayers
+			gameplayers.save(gp1);
+			gameplayers.save(gp2);
+			gameplayers.save(gp3);
+			gameplayers.save(gp4);
+
 			//create some ship types
 			String type1 = "destroyer";
 			String type2 = "submarine";
 			String type3 = "titanic";
 			String type4 = "black pearl";
-			//TODO add Gameplayer to ship as currently the ships dont have a gameplayer assigned
-			// TODO (cont')  therefore the database cannot find the ship corresponding to the gampelayer
+
 
 			//create some ship locations
 			List<String> loc1 = new ArrayList<>();
@@ -79,12 +79,20 @@ public class SalvoApplication {
 			loc3.add("H8");
 
             //create some ships
-			Ship ship1 = new Ship(type1,loc1,gp1);
-			Ship ship2 = new Ship(type2,loc2,gp1);
-			Ship ship3 = new Ship(type4,loc3,gp2);
-			Ship ship4 = new Ship(type4,loc3,gp2);
-			Ship ship5 = new Ship(type4,loc3,gp3);
-			Ship ship6 = new Ship(type4,loc3,gp4);
+			Ship ship1 = new Ship(type1,loc1);
+			Ship ship2 = new Ship(type2,loc2);
+			Ship ship3 = new Ship(type4,loc3);
+			Ship ship4 = new Ship(type4,loc3);
+			Ship ship5 = new Ship(type4,loc3);
+			Ship ship6 = new Ship(type4,loc3);
+
+			//Add ship to GamePlayer ( -> Java Instance) and  Gameplayer to ship (-> Database Table)
+			gp1.addShip(ship2);
+			gp1.addShip(ship1);
+			gp2.addShip(ship3);
+			gp3.addShip(ship4);
+			gp4.addShip(ship5);
+			gp4.addShip(ship6);
 
             //save ships
             ships.save(ship1);
@@ -93,13 +101,6 @@ public class SalvoApplication {
             ships.save(ship4);
             ships.save(ship5);
             ships.save(ship6);
-
-
-
-
-
-
-
 
 
 		};
