@@ -93,7 +93,7 @@ public class GamePlayer {
 
     //TODO ask Ferran for alternative method to connect gameplayer and ships
     public void addShip(Ship ship) {
-        ship.setGamePlayer(this);
+        ship.setGamePlayer(this); //add gameplayer to ship
         this.ships.add(ship);
     }
 }

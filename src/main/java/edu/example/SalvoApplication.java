@@ -69,22 +69,30 @@ public class SalvoApplication {
 			List<String> loc1 = new ArrayList<>();
 			List<String> loc2 = new ArrayList<>();
 			List<String> loc3 = new ArrayList<>();
+			List<String> loc4 = new ArrayList<>();
+			List<String> loc5 = new ArrayList<>();
 			loc1.add("H1");
 			loc1.add("H2");
-			loc2.add("H3");
-			loc2.add("H4");
-			loc3.add("H5");
-			loc3.add("H6");
-			loc3.add("H7");
-			loc3.add("H8");
+			loc2.add("B1");
+			loc2.add("C1");
+			loc3.add("B4");
+			loc3.add("B5");
+			loc3.add("B6");
+			loc3.add("B7");
+			loc4.add("D10");
+			loc4.add("E10");
+			loc5.add("J4");
+			loc5.add("J5");
+			loc5.add("J6");
+			loc5.add("J7");
 
             //create some ships
 			Ship ship1 = new Ship(type1,loc1);
 			Ship ship2 = new Ship(type2,loc2);
 			Ship ship3 = new Ship(type4,loc3);
-			Ship ship4 = new Ship(type4,loc3);
+			Ship ship4 = new Ship(type1,loc4);
 			Ship ship5 = new Ship(type4,loc3);
-			Ship ship6 = new Ship(type4,loc3);
+			Ship ship6 = new Ship(type4,loc5);
 
 			//Add ship to GamePlayer ( -> Java Instance) and  Gameplayer to ship (-> Database Table)
 			gp1.addShip(ship2);
