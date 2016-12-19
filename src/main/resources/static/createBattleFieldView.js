@@ -2,7 +2,7 @@ function createBattleFieldView (){
     var columnHeaders = ["",1,2,3,4,5,6,7,8,9,10]
     var rowHeaders = [ "A", "B", "C", "D", "E", "F", "G", "H", "I", "J"]
 
-    var getTable = document.getElementById("battle-field");
+    var table = document.getElementById("battle-field");
     var setTableHeaders = table.appendChild(
             newColumnHeaderRow(columnHeaders)
             );
@@ -19,7 +19,7 @@ function newTableRow(rowHeader,columnHeaders){
     th.textContent = rowHeader;
     tr.appendChild(th);
 
-    for(i=1; i <= columnHeaders.length; i++){
+    for(i=1; i < columnHeaders.length; i++){
       var td = newTableDataElement();
       td.classList.add(rowHeader + columnHeaders[i]);
       tr.appendChild(td);
