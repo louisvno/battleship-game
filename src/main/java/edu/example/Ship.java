@@ -17,8 +17,9 @@ public class Ship {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="gamePlayer")
     private GamePlayer gamePlayer;
+
     @ElementCollection
-    @Column(name="shipLocations")
+    @Column(name="ship_locations")
     private List<String> shipLocations;
 
     //constructors

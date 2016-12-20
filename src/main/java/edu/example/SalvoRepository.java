@@ -1,11 +1,12 @@
 package edu.example;
 
-/**
- * Created by louis on 12/13/2016.
- */
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
+/**
+ * Created by louis on 12/20/2016.
+ */
 @RepositoryRestResource
-public interface GameRepository extends JpaRepository<Game, Long> {}
+public interface SalvoRepository extends JpaRepository<Salvo, Long> {
+
+}

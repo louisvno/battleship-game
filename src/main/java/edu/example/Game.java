@@ -5,9 +5,6 @@ package edu.example;
  */
 //Java Persistence API
 
-        import java.text.SimpleDateFormat;
-        import java.time.LocalDateTime;
-        import java.time.ZonedDateTime;
         import javax.persistence.Entity;
         import javax.persistence.GeneratedValue;
         import javax.persistence.GenerationType;
@@ -16,33 +13,31 @@ package edu.example;
         import javax.persistence.FetchType;
         import java.util.Date;
         import java.util.List;
-        import java.util.Locale;
+
 
 @Entity
 public class Game {
 
+    //Properties
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
-
-    //Properties
     private long id;
     private Date creationDate;
-    //private Date today = new Date();
-    //SimpleDateFormat sdf = new SimpleDateFormat("EEEE, MMMM d, yyyy 'at' h:mm a", Locale.ENGLISH);
-    //String formattedDate = sdf.format(today);
-
 
     //one Game can have many gameplayers
     @OneToMany(mappedBy="game", fetch=FetchType.EAGER)
-    public List <GamePlayer> gamePlayers;
+    private List <GamePlayer> gamePlayers;
 
     //constructors
-    //public Game () {}
-
     public Game () {
         this.creationDate = new Date();
-
     }
+    public Game (int timeOffset) {
+        Date now = new Date();
+        now.setTime( now.getTime() + timeOffset );
+        this.creationDate = now;
+    }
+
 
     //Methods getters and setters
     public List <GamePlayer> getGamePlayers (){
@@ -51,10 +46,6 @@ public class Game {
 
     public Date getCreationDate() {
         return creationDate;
-    }
-    //Is this needed??
-    public void setCreationDate(Date creationDate) {
-        this.creationDate = creationDate;
     }
 
     public String toString() {

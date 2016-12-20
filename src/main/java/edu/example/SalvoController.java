@@ -36,19 +36,19 @@ public class SalvoController {
         //findOne() returns the instance of gamePlayer with the ID that you pass as parameter
         GamePlayer gamePlayer = gamePlayers.findOne(gamePlayerId);
         Game game = gamePlayer.getGame();
-        Map gamePlayerMap = makeGameDTO(game);
-            gamePlayerMap.putAll(makeShipsDTO(gamePlayer));
+        Map gamePlayerMap = makeGameDTO(game);//TODO make unique DTO
+        gamePlayerMap.putAll(makeShipsDTO(gamePlayer));
 
         return gamePlayerMap;
     }
 
     private Map<String, Object> makeShipsDTO(GamePlayer gamePlayer){
         Map<String, Object> dto = new LinkedHashMap<>();
-        dto.put("ships", mapShipsFromGamePlayer(gamePlayer));
+        dto.put("ships", mapFleetFromGamePlayer(gamePlayer));
         return dto;
     }
 
-    private List<Object> mapShipsFromGamePlayer(GamePlayer gamePlayer){
+    private List<Object> mapFleetFromGamePlayer(GamePlayer gamePlayer){
         return
              gamePlayer.getFleet().stream()
                 .map(ship -> makeShipDataDTO(ship))
@@ -85,12 +85,8 @@ public class SalvoController {
     private Map<String, Object> makeGamePlayerDTO(GamePlayer gamePlayer) {
         Map<String, Object> dto = new LinkedHashMap<>();
            dto.put("id", gamePlayer.getId());
-           dto.put("player", mapPlayerFromGamePlayer(gamePlayer));
+           dto.put("player", makePlayerDTO(gamePlayer.getPlayer()));
         return dto;
-    }
-    private Object mapPlayerFromGamePlayer(GamePlayer gameplayer) {
-        //List<Object> list = new ArrayList <>();
-        return makePlayerDTO(gameplayer.getPlayer());
     }
 
     private Map<String, Object> makePlayerDTO(Player player) {

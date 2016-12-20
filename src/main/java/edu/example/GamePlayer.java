@@ -1,56 +1,44 @@
 package edu.example;
 
 import javax.persistence.*;
-import java.time.*;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 
 /**
  * Created by louis on 12/13/2016.
  */
 
-//A game can have multiple players and a player can be in multiple games
-//The GamePlayer table associates the players to their games
-// Because game and player are references to objects stored in other data tables,
-// you need to add JPA annotations to tell JPA how to connect the tables together.
-
-
-/*For each row of the pet database table, include a column owner_id with the ID of the owner of the pet.
-Given a pet, you can get the owner by retrieving the person with the stored owner_id.
-Given a person, you can get all that person's pets by collecting all the rows of the pet table that have that person's ID in the owner_id column.
-
-In JPA, we do this by
-
-
-annotating this field with JPA to link it to the data table
-define getOwner()  and setOwner() methods */
-
 @Entity
 public class GamePlayer {
 
+    //Properties
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
-    //Properties
     private long id;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="player")
     private Player player;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="game")
     private Game game;
+
     @OneToMany(mappedBy="gamePlayer",fetch = FetchType.EAGER)
     private Set<Ship> fleet;
-    private LocalDateTime joinDate;
-    //NOTE Default Constructor http://stackoverflow.com/questions/4488716/java-default-constructor
 
+    @OneToMany(mappedBy="gamePlayer",fetch = FetchType.EAGER)
+    private List <Salvo> salvoes;
+
+    private Date joinDate;
     public GamePlayer () {}
 
     public GamePlayer (Player player, Game game) {
         this.player = player;
         this.game = game;
-        this.joinDate = LocalDateTime.now();
+        this.joinDate = new Date();
         this.fleet = new HashSet<>();
+        this.salvoes = new LinkedList<>();
 
     }
 
@@ -70,13 +58,14 @@ public class GamePlayer {
         this.game = game;
     }
 
-    public void setJoinDate(LocalDateTime joinDate){
+    public void setJoinDate(Date joinDate){
         this.joinDate = joinDate;
     }
 
-    public LocalDateTime getJoinDate() {
+    public Date getJoinDate() {
         return joinDate;
     }
+
     public long getId() {
         return id;
     }
@@ -89,9 +78,14 @@ public class GamePlayer {
         this.fleet = fleet;
     }
 
+    public void fireSalvo(Salvo salvo){
+        salvo.setGamePlayer(this);//assign gameplayer to salvo
+        this.salvoes.add(salvo);//add salvo to gameplayer salvoes
+    }
+
     //TODO ask Ferran for alternative method to connect gameplayer and fleet
     public void addShip(Ship ship) {
-        ship.setGamePlayer(this); //add gameplayer to ship
-        this.fleet.add(ship);
+        ship.setGamePlayer(this); //assign gameplayer to ship
+        this.fleet.add(ship); //add ship to fleet
     }
 }
