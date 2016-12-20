@@ -1,3 +1,7 @@
+body{
+    background-color: rgb(51, 51, 51);
+}
+
 table {
     border-collapse: collapse;
     background: rgb(82,177,82); /* Old browsers */
@@ -26,3 +30,13 @@ background: #666666;
 box-shadow: inset 2px 2px 2px rgba(255, 255, 255, .4),
  inset -2px -2px 2px rgba(0, 0, 0, .4);
  }
+
+#game-info {
+    color:white;
+    font-size: 22px;
+}
+
+.wrapper {
+    margin:auto;
+    max-width:500px;
+}

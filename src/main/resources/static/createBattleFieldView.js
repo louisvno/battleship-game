@@ -3,10 +3,10 @@ function createBattleFieldView (){
     var rowHeaders = [ "A", "B", "C", "D", "E", "F", "G", "H", "I", "J"]
 
     var table = document.getElementById("battle-field");
-    var setTableHeaders = table.appendChild(
+    var createTableHeaders = table.appendChild(
             newColumnHeaderRow(columnHeaders)
             );
-    var setTableBody = rowHeaders.forEach( header => {
+    var createTableBody = rowHeaders.forEach( header => {
             table.appendChild(
                 newTableRow(header,columnHeaders)
             );
