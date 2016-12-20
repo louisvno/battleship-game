@@ -5,9 +5,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 //application context object = interface, does everything that the beanfactory does and more
 import org.springframework.context.annotation.Bean;
-
-import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,10 +21,10 @@ public class SalvoApplication {
     // Spring, as needed, will create an instance of a RestRepository and use it wherever one
     // is asked for.
 	public CommandLineRunner initData(
-			PlayerRepository players,
+			PlayerRepository playerRepo,
 			GameRepository games,
-			GamePlayerRepository gameplayers,
-			ShipRepository ships) {
+			GamePlayerRepository gameplayerRepo,
+			ShipRepository shipRepo) {
 
 		return (args) -> {
 			//create a few players
@@ -35,9 +32,9 @@ public class SalvoApplication {
 			Player p2 = new Player ("Silvester" , "Stallone");
 			Player p3 = new Player ("Jean Claude" , "Vandamme");
             //save the Players
-			players.save(p1);
-			players.save(p2);
-			players.save(p3);
+			playerRepo.save(p1);
+			playerRepo.save(p2);
+			playerRepo.save(p3);
 			//create a few games
 			//TODO make time difference
 			Game g1 = new Game ();
@@ -53,17 +50,16 @@ public class SalvoApplication {
 			GamePlayer gp3 = new GamePlayer(p3,g3);
 			GamePlayer gp4 = new GamePlayer(p2,g3);
 			//save some gameplayers
-			gameplayers.save(gp1);
-			gameplayers.save(gp2);
-			gameplayers.save(gp3);
-			gameplayers.save(gp4);
+			gameplayerRepo.save(gp1);
+			gameplayerRepo.save(gp2);
+			gameplayerRepo.save(gp3);
+			gameplayerRepo.save(gp4);
 
 			//create some ship types
 			String type1 = "destroyer";
 			String type2 = "submarine";
 			String type3 = "titanic";
 			String type4 = "black pearl";
-
 
 			//create some ship locations
 			List<String> loc1 = new ArrayList<>();
@@ -103,12 +99,12 @@ public class SalvoApplication {
 			gp4.addShip(ship6);
 
             //save ships
-            ships.save(ship1);
-            ships.save(ship2);
-            ships.save(ship3);
-            ships.save(ship4);
-            ships.save(ship5);
-            ships.save(ship6);
+            shipRepo.save(ship1);
+            shipRepo.save(ship2);
+            shipRepo.save(ship3);
+            shipRepo.save(ship4);
+            shipRepo.save(ship5);
+            shipRepo.save(ship6);
 
 
 		};

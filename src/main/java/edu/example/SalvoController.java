@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collector;
 
 import static java.util.stream.Collectors.toList;
 
@@ -51,7 +50,7 @@ public class SalvoController {
 
     private List<Object> mapShipsFromGamePlayer(GamePlayer gamePlayer){
         return
-             gamePlayer.getShips().stream()
+             gamePlayer.getFleet().stream()
                 .map(ship -> makeShipDataDTO(ship))
                 .collect(toList());
     }
