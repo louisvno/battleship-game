@@ -4,11 +4,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
 
 /**
  * Created by louis on 12/14/2016.
@@ -35,18 +40,47 @@ public class SalvoController {
     private Object mapGameByGamePlayerId(@PathVariable Long gamePlayerId) {
         //findOne() returns the instance of gamePlayer with the ID that you pass as parameter
         GamePlayer gamePlayer = gamePlayers.findOne(gamePlayerId);
-        Game game = gamePlayer.getGame();
-        Map gamePlayerMap = makeGameDTO(game);//TODO make unique DTO
-        gamePlayerMap.putAll(makeShipsDTO(gamePlayer));
 
-        return gamePlayerMap;
+        return makeGameViewDTO(gamePlayer);
     }
 
-    private Map<String, Object> makeShipsDTO(GamePlayer gamePlayer){
+    private Map<String,Object> makeGameViewDTO(GamePlayer gamePlayer){
         Map<String, Object> dto = new LinkedHashMap<>();
-        dto.put("ships", mapFleetFromGamePlayer(gamePlayer));
+        Game game = gamePlayer.getGame();
+
+        dto.put("id", game.getId());
+        dto.put("created", game.getCreationDate());
+        dto.put("gamePlayers", mapGamePlayersFromGame(game));
+        dto.put("fleet", mapFleetFromGamePlayer(gamePlayer));
+        dto.put("salvoes", mapSalvoes(game.getGamePlayers()));
+
         return dto;
     }
+    private Map <String, Object> mapSalvoes(List <GamePlayer> gamePlayers){
+        Map<String, Object> dto = new LinkedHashMap<>();
+
+        gamePlayers.forEach(gamePlayer -> {
+            dto.put(Long.valueOf(gamePlayer.getId()).toString() , mapTurns(gamePlayer.getSalvoes()));
+
+        });
+        return dto;
+    }
+
+    private Map <String, Object> mapTurns( List <Salvo> salvoes){
+        Map<String, Object> dto = new LinkedHashMap<>();
+        salvoes.forEach( salvo -> {
+            dto.put(salvo.getTurn().toString(), salvo.getTargets());
+        });
+
+        return dto;
+    }
+
+//    private List <String> mapTargets(Salvo salvo){
+//        List<String> targets = new ArrayList<>();
+//        Sa = gamePlayer.getGame();
+//        target.add(salvo.getTargets());
+//    }
+
 
     private List<Object> mapFleetFromGamePlayer(GamePlayer gamePlayer){
         return
@@ -68,7 +102,7 @@ public class SalvoController {
         Map<String, Object> dto = new LinkedHashMap<>();
         dto.put("id", game.getId());
         dto.put("created", game.getCreationDate());
-        dto.put("gamePlayers", mapGamePlayersFromGame(game)); //add method that returns Gameplayers
+        dto.put("gamePlayers", mapGamePlayersFromGame(game));
 
         return dto;
     }

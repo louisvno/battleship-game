@@ -18,13 +18,13 @@ function getParameterByName(name, url) {
 function loadGameData(gamePlayerId){
       $.get("/api/game_view/" + gamePlayerId, function(response){
          createBattleFieldView ();
-         showShips(response.ships);
+         showPlayerFleet(response.fleet);
          showGamePlayerNames (response.gamePlayers, gamePlayerId);
       });
  }
 
-function showShips(ships) {
-    ships.forEach( function(ship){
+function showPlayerFleet(fleet) {
+    fleet.forEach( function(ship){
         ship.locations.forEach(function (location){
             var loc = document.getElementsByClassName(location);
             loc[0].classList.add("ship");

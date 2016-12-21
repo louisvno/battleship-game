@@ -2,7 +2,6 @@ package edu.example;
 
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -13,16 +12,17 @@ public class Salvo {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
+
     @ElementCollection
     @Column(name="targets")
     private List <String> targets; //every salvo can have 2 targets
-    private int turn;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="game_player")
     private GamePlayer gamePlayer;
+    private Integer turn;
 
     public Salvo(){
-
     }
 
     public Salvo(List<String> targets){
@@ -47,11 +47,11 @@ public class Salvo {
         this.targets = targets;
     }
 
-    public int getTurn() {
+    public Integer getTurn() {
         return turn;
     }
 
-    public void setTurn(int turn) {
+    public void setTurn(Integer turn) {
         this.turn = turn;
     }
 
@@ -61,5 +61,6 @@ public class Salvo {
 
     public void setGamePlayer(GamePlayer gamePlayer) {
         this.gamePlayer = gamePlayer;
+        this.turn++;
     }
 }

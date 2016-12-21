@@ -137,10 +137,10 @@ public class SalvoApplication {
             Salvo salvo4 = new Salvo(targ4);
 
             //Add salvo to GamePlayer (store -> Java Instance) and Gameplayer to salvo (store -> Database Salvo Table)
-            gp1.addSalvo(salvo1);
-            gp2.addSalvo(salvo2);
-            gp3.addSalvo(salvo3);
-            gp4.addSalvo(salvo4);
+            gp1.fireSalvo(salvo1);
+            gp2.fireSalvo(salvo2);
+            gp3.fireSalvo(salvo3);
+            gp4.fireSalvo(salvo4);
 
             salvoRepo.save(salvo1);
             salvoRepo.save(salvo2);

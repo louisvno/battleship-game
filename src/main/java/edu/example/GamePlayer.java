@@ -78,6 +78,10 @@ public class GamePlayer {
         this.fleet = fleet;
     }
 
+    public List<Salvo> getSalvoes() {
+        return salvoes;
+    }
+
     public void fireSalvo(Salvo salvo){
         salvo.setGamePlayer(this);//assign gameplayer to salvo
         this.salvoes.add(salvo);//add salvo to gameplayer salvoes
@@ -88,8 +92,5 @@ public class GamePlayer {
         ship.setGamePlayer(this); //assign gameplayer to ship
         this.fleet.add(ship); //add ship to fleet
     }
-    public void addSalvo(Salvo salvo) {
-        salvo.setGamePlayer(this);
-        this.salvoes.add(salvo);
-    }
+
 }
