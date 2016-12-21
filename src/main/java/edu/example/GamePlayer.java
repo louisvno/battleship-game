@@ -88,4 +88,8 @@ public class GamePlayer {
         ship.setGamePlayer(this); //assign gameplayer to ship
         this.fleet.add(ship); //add ship to fleet
     }
+    public void addSalvo(Salvo salvo) {
+        salvo.setGamePlayer(this);
+        this.salvoes.add(salvo);
+    }
 }

@@ -18,7 +18,7 @@ public class Salvo {
     private List <String> targets; //every salvo can have 2 targets
     private int turn;
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="gamePlayer")
+    @JoinColumn(name="game_player")
     private GamePlayer gamePlayer;
 
     public Salvo(){

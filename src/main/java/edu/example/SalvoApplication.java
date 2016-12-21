@@ -27,7 +27,8 @@ public class SalvoApplication {
             PlayerRepository playerRepo,
             GameRepository games,
             GamePlayerRepository gameplayerRepo,
-            ShipRepository shipRepo) {
+            ShipRepository shipRepo,
+            SalvoRepository salvoRepo) {
 
         return (args) -> {
             //create a few players
@@ -113,30 +114,38 @@ public class SalvoApplication {
             shipRepo.save(ship5);
             shipRepo.save(ship6);
 
-//            //create some salvo targets
-//            List<String> targ1 = new ArrayList<>();
-//            List<String> targ2 = new ArrayList<>();
-//            List<String> targ3 = new ArrayList<>();
-//            List<String> targ4 = new ArrayList<>();
-//
-//            //add some targets
-//            targ1.add("A4");
-//            targ1.add("B7");
-//            targ2.add("C3");
-//            targ2.add("A7");
-//            targ3.add("H4");
-//            targ3.add("I7");
-//            targ4.add("J4");
-//            targ4.add("D8");
-//
-//            //create some salvoes
-//            Salvo salvo1 = new Salvo(targ1);
-//            Salvo salvo2 = new Salvo(targ2);
-//            Salvo salvo3 = new Salvo(targ3);
-//            Salvo salvo4 = new Salvo(targ4);
+            //create some salvo targets
+            List<String> targ1 = new ArrayList<>();
+            List<String> targ2 = new ArrayList<>();
+            List<String> targ3 = new ArrayList<>();
+            List<String> targ4 = new ArrayList<>();
+
+            //add some targets
+            targ1.add("A4");
+            targ1.add("B7");
+            targ2.add("C3");
+            targ2.add("A7");
+            targ3.add("H4");
+            targ3.add("I7");
+            targ4.add("J4");
+            targ4.add("D8");
+
+            //create some salvoes
+            Salvo salvo1 = new Salvo(targ1);
+            Salvo salvo2 = new Salvo(targ2);
+            Salvo salvo3 = new Salvo(targ3);
+            Salvo salvo4 = new Salvo(targ4);
 
             //Add salvo to GamePlayer (store -> Java Instance) and Gameplayer to salvo (store -> Database Salvo Table)
+            gp1.addSalvo(salvo1);
+            gp2.addSalvo(salvo2);
+            gp3.addSalvo(salvo3);
+            gp4.addSalvo(salvo4);
 
+            salvoRepo.save(salvo1);
+            salvoRepo.save(salvo2);
+            salvoRepo.save(salvo3);
+            salvoRepo.save(salvo4);
 
         };
     }

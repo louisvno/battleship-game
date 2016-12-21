@@ -15,7 +15,7 @@ public class Ship {
     private String shipType;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="gamePlayer")
+    @JoinColumn(name="game_player")
     private GamePlayer gamePlayer;
 
     @ElementCollection
