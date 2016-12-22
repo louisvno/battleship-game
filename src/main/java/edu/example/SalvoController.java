@@ -75,13 +75,6 @@ public class SalvoController {
         return dto;
     }
 
-//    private List <String> mapTargets(Salvo salvo){
-//        List<String> targets = new ArrayList<>();
-//        Sa = gamePlayer.getGame();
-//        target.add(salvo.getTargets());
-//    }
-
-
     private List<Object> mapFleetFromGamePlayer(GamePlayer gamePlayer){
         return
              gamePlayer.getFleet().stream()
@@ -108,13 +101,16 @@ public class SalvoController {
     }
     //Because every Game instance has a list of GamePlayers
     //you can map the GamePlayers by getting this list
-    private List<Object> mapGamePlayersFromGame(Game game) {
-        return
-                game.getGamePlayers().stream()
-                        .map(gamePlayer -> makeGamePlayerDTO(gamePlayer))
-                        .collect(toList());
+    private Map<String, Object> mapGamePlayersFromGame(Game game) {
+        Map<String, Object> dto = new LinkedHashMap<>();
+        List<GamePlayer> gamePlayers = game.getGamePlayers();
+        gamePlayers.forEach( gamePlayer ->
+                dto.put(
+                        Long.valueOf(gamePlayer.getId()).toString()
+                        , makeGamePlayerDTO(gamePlayer)));
+        return dto;
     }
-    //NOTE if you dont use DTO, spring looks at getters of the Class and returns all, this maybe unwanted
+    //NOTE if you don't use DTO, spring looks at getters of the Class and returns all, this maybe unwanted
 
     private Map<String, Object> makeGamePlayerDTO(GamePlayer gamePlayer) {
         Map<String, Object> dto = new LinkedHashMap<>();
@@ -129,6 +125,5 @@ public class SalvoController {
            dto.put("firstName", player.getFirstName());
         return dto;
     }
-
 
 }

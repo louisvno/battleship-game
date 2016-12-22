@@ -17,11 +17,26 @@ function getParameterByName(name, url) {
  // pass http service to the controller
 function loadGameData(gamePlayerId){
       $.get("/api/game_view/" + gamePlayerId, function(response){
-         createBattleFieldView ();
-         showPlayerFleet(response.fleet);
-         showGamePlayerNames (response.gamePlayers, gamePlayerId);
+         //get data from JSON so that might the data structure change only has to be changed here
+         var gamePlayers = response.gamePlayers,
+         salvoes = response.salvoes,
+         player = gamePlayers[gamePlayerId],
+         playerSalvoes = salvoes[gamePlayerId],
+         playerFleet = response.fleet,
+         enemyId = getEnemyId(gamePlayers,gamePlayerId),
+         enemy = gamePlayers[enemyId],
+         enemySalvoes = response.salvoes[enemyId];
+
+         renderGameView (playerFleet, player, enemy,enemySalvoes, playerFleet)
       });
  }
+
+function renderGameView (playerFleet, player, enemy,enemySalvoes, playerFleet){
+     createBattleFieldView ();
+     showPlayerFleet(playerFleet);
+     showGamePlayerNames (player, enemy);
+     getHitsReceived(enemySalvoes, playerFleet);
+}
 
 function showPlayerFleet(fleet) {
     fleet.forEach( function(ship){
@@ -32,14 +47,23 @@ function showPlayerFleet(fleet) {
     })
 }
 
-function showGamePlayerNames(gamePlayers, gamePlayerId){
-   var $player = $('#player-name');
-      var $opponent = $('#opponent-name');
+function showGamePlayerNames(player, enemy){
+      $('#player-name').text(player.player.firstName);
+      $('#enemy-name').text(enemy.player.firstName);
+}
 
-      gamePlayers.forEach( function (gamePlayer) {
-        if (gamePlayer.id == gamePlayerId){
-           $player.text(gamePlayer.player.firstName)
-        } else {$opponent.text(gamePlayer.player.firstName )};
-      });
+//compare enemy salvo targets with player ship locations
+function getHitsReceived(response, gamePlayerId){
+    var salvoes = response.salvoes;
+    //var enemy = getEnemyId(response.gamePlayers,gamePlayerId);
+
 
 }
+
+function getEnemyId(gamePlayers, gamePlayerId) {
+
+  return Object.keys(gamePlayers).filter(key =>{
+        return key != gamePlayerId});
+
+}
+
