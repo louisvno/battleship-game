@@ -153,14 +153,16 @@ public class SalvoController {
 
     private List<String> getTargetsHit (Salvo salvo){
         GamePlayer enemy = getEnemy(salvo.getGamePlayer());
-        List <String> salvoTargets = salvo.getTargets();
-        List <String> enemyShipLocations = getAllShipLocations(enemy);
+        if (enemy != null){
+            List <String> salvoTargets = salvo.getTargets();
+            List <String> enemyShipLocations = getAllShipLocations(enemy);
 
-        List<String> targetsHit = salvoTargets.stream()
-                .filter(enemyShipLocations::contains)
-                .collect(toList());
-
-        return targetsHit;
+            List<String> targetsHit = salvoTargets.stream()
+                    .filter(enemyShipLocations::contains)
+                    .collect(toList());
+            return targetsHit;
+        }
+        else return null;
     }
     //TODO remove the this.game as it is confusing
     private GamePlayer getEnemy (GamePlayer gamePlayer) {
