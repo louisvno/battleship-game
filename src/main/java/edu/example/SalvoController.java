@@ -5,15 +5,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
+
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toMap;
+
 
 /**
  * Created by louis on 12/14/2016.
@@ -36,31 +33,40 @@ public class SalvoController {
                         .collect(toList());
     }
 
+    private GamePlayer gamePlayer;
+    private Game game;
+
+
     @RequestMapping("/game_view/{gamePlayerId}")
     private Object mapGameByGamePlayerId(@PathVariable Long gamePlayerId) {
         //findOne() returns the instance of gamePlayer with the ID that you pass as parameter
         GamePlayer gamePlayer = gamePlayers.findOne(gamePlayerId);
 
-        return makeGameViewDTO(gamePlayer);
+        this.gamePlayer = gamePlayer;
+        this.game = gamePlayer.getGame();
+
+
+        return makeGameViewDTO();
     }
 
-    private Map<String,Object> makeGameViewDTO(GamePlayer gamePlayer){
+    private Map<String,Object> makeGameViewDTO(){
         Map<String, Object> dto = new LinkedHashMap<>();
-        Game game = gamePlayer.getGame();
 
-        dto.put("id", game.getId());
-        dto.put("created", game.getCreationDate());
+        dto.put("id", this.game.getId());
+        dto.put("created", this.game.getCreationDate());
         dto.put("gamePlayers", mapGamePlayersFromGame(game));
-        dto.put("fleet", mapFleetFromGamePlayer(gamePlayer));
-        dto.put("salvoes", mapSalvoes(game.getGamePlayers()));
+        dto.put("fleet", mapFleetFromGamePlayer(this.gamePlayer));
+        dto.put("salvoes", mapSalvoes(this.game.getGamePlayers()));
 
         return dto;
     }
+
     private Map <String, Object> mapSalvoes(List <GamePlayer> gamePlayers){
         Map<String, Object> dto = new LinkedHashMap<>();
 
         gamePlayers.forEach(gamePlayer -> {
             dto.put(Long.valueOf(gamePlayer.getId()).toString() , mapTurns(gamePlayer.getSalvoes()));
+
 
         });
         return dto;
@@ -68,9 +74,18 @@ public class SalvoController {
 
     private Map <String, Object> mapTurns( List <Salvo> salvoes){
         Map<String, Object> dto = new LinkedHashMap<>();
+
         salvoes.forEach( salvo -> {
-            dto.put(salvo.getTurn().toString(), salvo.getTargets());
+            dto.put(salvo.getTurn().toString(), mapSalvo(salvo));
         });
+        return dto;
+    }
+
+    private Map <String, Object> mapSalvo(Salvo salvo){
+        Map<String, Object> dto = new LinkedHashMap<>();
+
+        dto.put("targets", salvo.getTargets());
+        dto.put("hits", getTargetsHit(salvo));
 
         return dto;
     }
@@ -86,11 +101,10 @@ public class SalvoController {
         Map<String, Object> dto = new LinkedHashMap<>();
         dto.put("locations", ship.getShipLocations());
         dto.put("types", ship.getShipType());
+//        dto.put("damage", getShipDamage(ship));
         return dto;
     }
 
-    //DTO = Data transfer object
-    // = decide from your class which data do you want to send in you JSON
     private Map<String, Object> makeGameDTO(Game game) {
         Map<String, Object> dto = new LinkedHashMap<>();
         dto.put("id", game.getId());
@@ -99,8 +113,7 @@ public class SalvoController {
 
         return dto;
     }
-    //Because every Game instance has a list of GamePlayers
-    //you can map the GamePlayers by getting this list
+
     private Map<String, Object> mapGamePlayersFromGame(Game game) {
         Map<String, Object> dto = new LinkedHashMap<>();
         List<GamePlayer> gamePlayers = game.getGamePlayers();
@@ -110,7 +123,6 @@ public class SalvoController {
                         , makeGamePlayerDTO(gamePlayer)));
         return dto;
     }
-    //NOTE if you don't use DTO, spring looks at getters of the Class and returns all, this maybe unwanted
 
     private Map<String, Object> makeGamePlayerDTO(GamePlayer gamePlayer) {
         Map<String, Object> dto = new LinkedHashMap<>();
@@ -124,6 +136,43 @@ public class SalvoController {
            dto.put("id", player.getId());
            dto.put("firstName", player.getFirstName());
         return dto;
+    }
+
+    /*
+    * Game Logic
+    * */
+
+    private List <String> getAllShipLocations(GamePlayer gamePlayer) {
+        Set<Ship> fleet = gamePlayer.getFleet();
+        List<String> allLocations = fleet.stream()
+                .map(Ship::getShipLocations)
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
+        return allLocations;
+    }
+
+    private List<String> getTargetsHit (Salvo salvo){
+        GamePlayer enemy = getEnemy(salvo.getGamePlayer());
+        List <String> salvoTargets = salvo.getTargets();
+        List <String> enemyShipLocations = getAllShipLocations(enemy);
+
+        List<String> targetsHit = salvoTargets.stream()
+                .filter(enemyShipLocations::contains)
+                .collect(toList());
+
+        return targetsHit;
+    }
+    //TODO remove the this.game as it is confusing
+    private GamePlayer getEnemy (GamePlayer gamePlayer) {
+        Long playerId = gamePlayer.getId();
+        List<GamePlayer> gamePlayers = this.game.getGamePlayers();
+
+        GamePlayer enemy = gamePlayers.stream()
+                .filter(player -> player.getId() != playerId )
+                .findAny()
+                .orElse(null);
+
+        return enemy;
     }
 
 }

@@ -91,20 +91,20 @@ public class SalvoApplication {
             loc5.add("J7");
 
             //create some ships
-            Ship ship1 = new Ship(type1, loc1);
-            Ship ship2 = new Ship(type2, loc2);
-            Ship ship3 = new Ship(type4, loc3);
-            Ship ship4 = new Ship(type1, loc4);
-            Ship ship5 = new Ship(type4, loc3);
-            Ship ship6 = new Ship(type4, loc5);
+            Ship ship1 = new Ship(type1,loc1,gp1);
+            Ship ship2 = new Ship(type2,loc2,gp1);
+            Ship ship3 = new Ship(type4,loc3,gp2);
+            Ship ship4 = new Ship(type1,loc4,gp3);
+            Ship ship5 = new Ship(type4,loc3,gp4);
+            Ship ship6 = new Ship(type4,loc5,gp4);
 
             //Add ship to GamePlayer (store -> Java Instance) and  Gameplayer to ship (store ->Ship Database Table)
-            gp1.addShip(ship2);
-            gp1.addShip(ship1);
-            gp2.addShip(ship3);
-            gp3.addShip(ship4);
-            gp4.addShip(ship5);
-            gp4.addShip(ship6);
+//            gp1.addShip(ship2);
+//            gp1.addShip(ship1);
+//            gp2.addShip(ship3);
+//            gp3.addShip(ship4);
+//            gp4.addShip(ship5);
+//            gp4.addShip(ship6);
 
             //save ships
             shipRepo.save(ship1);
@@ -125,10 +125,10 @@ public class SalvoApplication {
             targ1.add("B7");
             targ2.add("C3");
             targ2.add("A7");
-            targ3.add("H4");
+            targ3.add("J6");
             targ3.add("I7");
             targ4.add("J4");
-            targ4.add("D8");
+            targ4.add("D10");
 
             //create some salvoes
             Salvo salvo1 = new Salvo(targ1);

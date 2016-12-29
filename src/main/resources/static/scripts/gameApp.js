@@ -52,18 +52,20 @@ function showGamePlayerNames(player, enemy){
       $('#enemy-name').text(enemy.player.firstName);
 }
 
-//compare enemy salvo targets with player ship locations
-function getHitsReceived(response, gamePlayerId){
-    var salvoes = response.salvoes;
-    //var enemy = getEnemyId(response.gamePlayers,gamePlayerId);
+//TODO compare enemy salvo targets with player ship locations
+function getHitsReceived(enemySalvoes, playerFleet){
+    //turn:["loc1","loc2"]
+    //shipid : { locations : ["loc1","loc2"], type: "shiptype}
+    //shipid : { locations : ["loc1","loc2"], type: "shiptype}
+    //hits : { turn:["loc1","loc2"]}
+    Object(playerFleet).
 
-
+    return playerFleet;
 }
 
 function getEnemyId(gamePlayers, gamePlayerId) {
 
-  return Object.keys(gamePlayers).filter(key =>{
+  return Object.keys(gamePlayers).filter(key => {
         return key != gamePlayerId});
-
 }
 

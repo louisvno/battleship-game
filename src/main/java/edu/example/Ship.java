@@ -1,6 +1,7 @@
 package edu.example;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,15 +21,16 @@ public class Ship {
 
     @ElementCollection
     @Column(name="ship_locations")
-    private List<String> shipLocations;
+    private List<String> shipLocations = new ArrayList<>();
 
     //constructors
     public Ship (){
 
     }
-    public Ship (String type, List locations){
+    public Ship (String type, List locations,GamePlayer gameplayer){
         this.shipType = type;
         this.shipLocations = locations;
+        this.gamePlayer = gameplayer;
     }
 
     //methods

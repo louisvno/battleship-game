@@ -25,20 +25,17 @@ public class GamePlayer {
     private Game game;
 
     @OneToMany(mappedBy="gamePlayer",fetch = FetchType.EAGER)
-    private Set<Ship> fleet;
+    private Set<Ship> fleet = new HashSet<>();
 
     @OneToMany(mappedBy="gamePlayer",fetch = FetchType.EAGER)
-    private List <Salvo> salvoes;
+    private List <Salvo> salvoes = new LinkedList<>();;
 
-    private Date joinDate;
+    private Date joinDate = new Date();
     public GamePlayer () {}
 
     public GamePlayer (Player player, Game game) {
         this.player = player;
         this.game = game;
-        this.joinDate = new Date();
-        this.fleet = new HashSet<>();
-        this.salvoes = new LinkedList<>();
 
     }
 
@@ -88,9 +85,11 @@ public class GamePlayer {
     }
 
     //TODO ask Ferran for alternative method to connect gameplayer and fleet
-    public void addShip(Ship ship) {
-        ship.setGamePlayer(this); //assign gameplayer to ship
-        this.fleet.add(ship); //add ship to fleet
-    }
+    //Alternative: let database arrange relation between ship and GP,
+    // add Gameplayer to ship when creating a new ship
+//    public void addShip(Ship ship) {
+//        ship.setGamePlayer(this); //assign gameplayer to ship
+//        //this.fleet.add(ship); //add ship to fleet
+//    }
 
 }

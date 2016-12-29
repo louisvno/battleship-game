@@ -11,6 +11,7 @@ package edu.example;
         import javax.persistence.Id;
         import javax.persistence.OneToMany;
         import javax.persistence.FetchType;
+        import java.util.ArrayList;
         import java.util.Date;
         import java.util.List;
 
@@ -26,7 +27,7 @@ public class Game {
 
     //one Game can have many gameplayers
     @OneToMany(mappedBy="game", fetch=FetchType.EAGER)
-    private List <GamePlayer> gamePlayers;
+    private List <GamePlayer> gamePlayers = new ArrayList<>();
 
     //constructors
     public Game () {
