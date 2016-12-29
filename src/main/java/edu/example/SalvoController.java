@@ -65,8 +65,8 @@ public class SalvoController {
         Map<String, Object> dto = new LinkedHashMap<>();
 
         gamePlayers.forEach(gamePlayer -> {
-            dto.put(Long.valueOf(gamePlayer.getId()).toString() , mapTurns(gamePlayer.getSalvoes()));
-
+            dto.put(Long.valueOf(gamePlayer.getId()).toString(),
+                    mapTurns(gamePlayer.getSalvoes()));
 
         });
         return dto;

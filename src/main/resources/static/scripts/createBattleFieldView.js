@@ -1,8 +1,8 @@
-function createBattleFieldView (){
+function createGameDisplay (destination){
     var columnHeaders = ["",1,2,3,4,5,6,7,8,9,10]
     var rowHeaders = [ "A", "B", "C", "D", "E", "F", "G", "H", "I", "J"]
 
-    var table = document.getElementById("battle-field");
+    var table = document.getElementById(destination);
     var createTableHeaders = table.appendChild(
             newColumnHeaderRow(columnHeaders)
             );

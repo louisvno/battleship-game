@@ -27,22 +27,24 @@ function loadGameData(gamePlayerId){
          enemy = gamePlayers[enemyId],
          enemySalvoes = response.salvoes[enemyId];
 
+
          renderGameView (playerFleet, player, enemy,enemySalvoes, playerFleet)
       });
  }
 
 function renderGameView (playerFleet, player, enemy,enemySalvoes, playerFleet){
-     createBattleFieldView ();
+     createGameDisplay ("fleet-display");
+     createGameDisplay ("battlefield-display");
      showPlayerFleet(playerFleet);
      showGamePlayerNames (player, enemy);
-     getHitsReceived(enemySalvoes, playerFleet);
+     showHitsReceived(enemySalvoes);
 }
 
 function showPlayerFleet(fleet) {
     fleet.forEach( function(ship){
         ship.locations.forEach(function (location){
-            var loc = document.getElementsByClassName(location);
-            loc[0].classList.add("ship");
+            var $loc = $('#fleet-display .' + location);
+            $loc.addClass("ship");
         })
     })
 }
@@ -52,20 +54,17 @@ function showGamePlayerNames(player, enemy){
       $('#enemy-name').text(enemy.player.firstName);
 }
 
-//TODO compare enemy salvo targets with player ship locations
-function getHitsReceived(enemySalvoes, playerFleet){
-    //turn:["loc1","loc2"]
-    //shipid : { locations : ["loc1","loc2"], type: "shiptype}
-    //shipid : { locations : ["loc1","loc2"], type: "shiptype}
-    //hits : { turn:["loc1","loc2"]}
-    Object(playerFleet).
-
-    return playerFleet;
-}
-
+//gamePlayers keys is an id
 function getEnemyId(gamePlayers, gamePlayerId) {
-
-  return Object.keys(gamePlayers).filter(key => {
-        return key != gamePlayerId});
+  return Object.keys(gamePlayers).filter(id => {
+        return id != gamePlayerId});
 }
 
+//enemysalvoes keys is a turn number
+function showHitsReceived(enemySalvoes){
+    Object.keys(enemySalvoes).forEach(turn => {
+        enemySalvoes[turn].hits.forEach(hit => {
+            $('#fleet-display .' + hit).addClass("hit").text(turn);
+        });
+    });
+};
