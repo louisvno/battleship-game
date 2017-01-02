@@ -131,21 +131,24 @@ public class SalvoApplication {
             targ4.add("D10");
 
             //create some salvoes
-            Salvo salvo1 = new Salvo(targ1);
-            Salvo salvo2 = new Salvo(targ2);
-            Salvo salvo3 = new Salvo(targ3);
-            Salvo salvo4 = new Salvo(targ4);
+            Salvo salvo1 = new Salvo(targ1,gp1,1);
+            Salvo salvo2 = new Salvo(targ2,gp2,1);
+            Salvo salvo3 = new Salvo(targ3,gp3,1);
+            Salvo salvo4 = new Salvo(targ4,gp4,1);
+            Salvo salvo5 = new Salvo(targ1,gp4,2);
 
             //Add salvo to GamePlayer (store -> Java Instance) and Gameplayer to salvo (store -> Database Salvo Table)
-            gp1.fireSalvo(salvo1);
-            gp2.fireSalvo(salvo2);
-            gp3.fireSalvo(salvo3);
-            gp4.fireSalvo(salvo4);
+//            gp1.fireSalvo(salvo1);
+//            gp2.fireSalvo(salvo2);
+//            gp3.fireSalvo(salvo3);
+//            gp4.fireSalvo(salvo4);
+//            gp4.fireSalvo(salvo5);
 
             salvoRepo.save(salvo1);
             salvoRepo.save(salvo2);
             salvoRepo.save(salvo3);
             salvoRepo.save(salvo4);
+            salvoRepo.save(salvo5);
 
         };
     }

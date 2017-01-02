@@ -25,10 +25,11 @@ public class Salvo {
     public Salvo(){
     }
 
-    public Salvo(List<String> targets){
+    public Salvo(List<String> targets, GamePlayer gamePlayer, int turn){
         this.targets = new ArrayList<>();
         this.targets.addAll(targets);
-        this.turn = 0;
+        this.turn = turn;
+        this.gamePlayer = gamePlayer;
     }
 
     public long getId() {

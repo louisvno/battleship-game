@@ -79,10 +79,10 @@ public class GamePlayer {
         return salvoes;
     }
 
-    public void fireSalvo(Salvo salvo){
-        salvo.setGamePlayer(this);//assign gameplayer to salvo
-        this.salvoes.add(salvo);//add salvo to gameplayer salvoes
-    }
+//    public void fireSalvo(Salvo salvo){
+//        salvo.setGamePlayer(this);//assign gameplayer to salvo
+//        this.salvoes.add(salvo);//add salvo to gameplayer salvoes
+//    }
 
     //TODO ask Ferran for alternative method to connect gameplayer and fleet
     //Alternative: let database arrange relation between ship and GP,

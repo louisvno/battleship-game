@@ -28,16 +28,18 @@ function loadGameData(gamePlayerId){
          enemySalvoes = response.salvoes[enemyId];
 
 
-         renderGameView (playerFleet, player, enemy,enemySalvoes, playerFleet)
+         renderGameView (playerFleet, player,playerSalvoes, enemy,enemySalvoes, playerFleet)
       });
  }
 
-function renderGameView (playerFleet, player, enemy,enemySalvoes, playerFleet){
+function renderGameView (playerFleet, player,playerSalvoes, enemy,enemySalvoes, playerFleet){
      createGameDisplay ("fleet-display");
      createGameDisplay ("battlefield-display");
      showPlayerFleet(playerFleet);
      showGamePlayerNames (player, enemy);
      showHitsReceived(enemySalvoes);
+     showHits(playerSalvoes);
+     showMissed(playerSalvoes);
 }
 
 function showPlayerFleet(fleet) {
@@ -54,17 +56,35 @@ function showGamePlayerNames(player, enemy){
       $('#enemy-name').text(enemy.player.firstName);
 }
 
-//gamePlayers keys is an id
+//gamePlayers; keys are id's
 function getEnemyId(gamePlayers, gamePlayerId) {
   return Object.keys(gamePlayers).filter(id => {
         return id != gamePlayerId});
 }
 
-//enemysalvoes keys is a turn number
+//enemysalvoes; keys are turns
 function showHitsReceived(enemySalvoes){
     Object.keys(enemySalvoes).forEach(turn => {
         enemySalvoes[turn].hits.forEach(hit => {
             $('#fleet-display .' + hit).addClass("hit").text(turn);
+        });
+    });
+};
+
+//playerSalvoes; keys are turns
+function showHits(playerSalvoes){
+    Object.keys(playerSalvoes).forEach(turn => {
+        playerSalvoes[turn].hits.forEach(hit => {
+            $('#battlefield-display .' + hit).addClass("ship hit").text(turn);
+        });
+    });
+};
+
+//playerSalvoes; keys are turns
+function showMissed(playerSalvoes){
+    Object.keys(playerSalvoes).forEach(turn => {
+        playerSalvoes[turn].missed.forEach(miss => {
+            $('#battlefield-display .' + miss).addClass("missed").text(turn);
         });
     });
 };

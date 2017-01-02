@@ -86,6 +86,7 @@ public class SalvoController {
 
         dto.put("targets", salvo.getTargets());
         dto.put("hits", getTargetsHit(salvo));
+        dto.put("missed", getTargetsMissed(salvo));
 
         return dto;
     }
@@ -164,7 +165,21 @@ public class SalvoController {
         }
         else return null;
     }
-    //TODO remove the this.game as it is confusing
+
+    private List<String> getTargetsMissed (Salvo salvo){
+        GamePlayer enemy = getEnemy(salvo.getGamePlayer());
+        if (enemy != null){
+            List <String> salvoTargets = salvo.getTargets();
+            List <String> enemyShipLocations = getAllShipLocations(enemy);
+
+            List<String> targetsHit = salvoTargets.stream()
+                    .filter(target -> !enemyShipLocations.contains(target))
+                    .collect(toList());
+            return targetsHit;
+        }
+        else return null;
+    }
+
     private GamePlayer getEnemy (GamePlayer gamePlayer) {
         Long playerId = gamePlayer.getId();
         List<GamePlayer> gamePlayers = this.game.getGamePlayers();
