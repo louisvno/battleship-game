@@ -28,18 +28,34 @@ public class SalvoApplication {
             GameRepository games,
             GamePlayerRepository gameplayerRepo,
             ShipRepository shipRepo,
-            SalvoRepository salvoRepo) {
+            SalvoRepository salvoRepo,
+            ScoreRepository ScoreRepo) {
 
         return (args) -> {
             //create a few players
             Player p1 = new Player("Arnie", "Schwarz");
             Player p2 = new Player("Silvester", "Stallone");
             Player p3 = new Player("Jean Claude", "Vandamme");
+            Player p4 = new Player("Lionel", "Messi");
+            Player p5 = new Player("Eric", "Cartman");
+            Player p6 = new Player("Kanye", "West");
+            Player p7 = new Player("Donald", "Trump");
+            Player p8 = new Player("Penelope", "Cruz");
+            Player p9 = new Player("Tom", "Cruise");
+            Player p10 = new Player("Rutger", "Hauer");
+
 
             //save the Players
             playerRepo.save(p1);
             playerRepo.save(p2);
             playerRepo.save(p3);
+            playerRepo.save(p4);
+            playerRepo.save(p5);
+            playerRepo.save(p6);
+            playerRepo.save(p7);
+            playerRepo.save(p8);
+            playerRepo.save(p9);
+            playerRepo.save(p10);
 
             //create a few games
             Game g1 = new Game();
@@ -149,6 +165,22 @@ public class SalvoApplication {
             salvoRepo.save(salvo3);
             salvoRepo.save(salvo4);
             salvoRepo.save(salvo5);
+
+            Score score1 = new Score(p1,g1,1.0);
+            Score score2 = new Score(p2,g1,0.0);
+            Score score3 = new Score(p3,g2,1.0);
+            Score score4 = new Score(p2,g2,1.0);
+            Score score5 = new Score(p2,g2,1.0);
+            Score score6 = new Score(p2,g2,1.0);
+
+            ScoreRepo.save(score1);
+            ScoreRepo.save(score2);
+            ScoreRepo.save(score3);
+            ScoreRepo.save(score4);
+            ScoreRepo.save(score5);
+            ScoreRepo.save(score6);
+
+
 
         };
     }

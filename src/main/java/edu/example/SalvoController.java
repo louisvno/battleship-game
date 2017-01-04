@@ -23,6 +23,8 @@ public class SalvoController {
     private GameRepository games;
     @Autowired
     private GamePlayerRepository gamePlayers;
+    @Autowired
+    private PlayerRepository players;
 
     @RequestMapping("/games")
     private List<Object> mapAllGames() {
@@ -33,30 +35,71 @@ public class SalvoController {
                         .collect(toList());
     }
 
-    private GamePlayer gamePlayer;
-    private Game game;
+    @RequestMapping("/player_stats")
+    private Object mapLeaderBoard() {
 
+        List<Player> allPlayers = players.findAll();
 
+        return makePlayerStatsDTO(allPlayers);
+
+    }
+    //TODO ask about Object
     @RequestMapping("/game_view/{gamePlayerId}")
     private Object mapGameByGamePlayerId(@PathVariable Long gamePlayerId) {
         //findOne() returns the instance of gamePlayer with the ID that you pass as parameter
         GamePlayer gamePlayer = gamePlayers.findOne(gamePlayerId);
 
-        this.gamePlayer = gamePlayer;
-        this.game = gamePlayer.getGame();
-
-
-        return makeGameViewDTO();
+        return makeGameViewDTO(gamePlayer);
     }
-
-    private Map<String,Object> makeGameViewDTO(){
+    //TODO finish dto mapping
+    //rank, player(id, firstname), total score
+    private Map<String, Object> makePlayerStatsDTO(List<Player> allPlayers){
         Map<String, Object> dto = new LinkedHashMap<>();
 
-        dto.put("id", this.game.getId());
-        dto.put("created", this.game.getCreationDate());
+        List<Player> sortedPlayers = allPlayers.stream()
+                .sorted((p1,p2) -> Double.compare(p2.getTotalScore(),p1.getTotalScore()))
+                //.limit(5)
+                .collect(toList());
+
+        dto.put("players", sortedPlayers.stream()
+                .map(player -> makePlayerStatsDTO(player))
+                .collect(Collectors.toList()));
+
+        return dto;
+    }
+//    private Map<String, Object> makeRankDTO(List<Player> players) {
+//        Map<String, Object> dto = new LinkedHashMap<>();
+//        int i= 1;
+//        for(Player p : players) {
+//            dto.put(Integer.valueOf(i).toString(), makeRankedPlayerDTO(p));
+//            i++;
+//        }
+//        return dto;
+//    }
+
+    private Map<String, Object> makePlayerStatsDTO(Player player) {
+        Map<String, Object> dto = new LinkedHashMap<>();
+
+            dto.put("id", player.getId());
+            dto.put("firstName", player.getFirstName());
+            dto.put("wins", player.getWins());
+            dto.put("losses", player.getLosses());
+            dto.put("ties", player.getTies());
+            dto.put("totalScore", player.getTotalScore());
+            dto.put("gamesPlayed", player.getGamesPlayed());
+
+        return dto;
+    }
+
+    private Map<String,Object> makeGameViewDTO(GamePlayer gamePlayer){
+        Map<String, Object> dto = new LinkedHashMap<>();
+        Game game = gamePlayer.getGame();
+
+        dto.put("id", game.getId());
+        dto.put("created", game.getCreationDate());
         dto.put("gamePlayers", mapGamePlayersFromGame(game));
-        dto.put("fleet", mapFleetFromGamePlayer(this.gamePlayer));
-        dto.put("salvoes", mapSalvoes(this.game.getGamePlayers()));
+        dto.put("fleet", mapFleetFromGamePlayer(gamePlayer));
+        dto.put("salvoes", mapSalvoes(game.getGamePlayers()));
 
         return dto;
     }
@@ -102,7 +145,7 @@ public class SalvoController {
         Map<String, Object> dto = new LinkedHashMap<>();
         dto.put("locations", ship.getShipLocations());
         dto.put("types", ship.getShipType());
-//        dto.put("damage", getShipDamage(ship));
+
         return dto;
     }
 
@@ -111,6 +154,7 @@ public class SalvoController {
         dto.put("id", game.getId());
         dto.put("created", game.getCreationDate());
         dto.put("gamePlayers", mapGamePlayersFromGame(game));
+
 
         return dto;
     }
@@ -182,7 +226,8 @@ public class SalvoController {
 
     private GamePlayer getEnemy (GamePlayer gamePlayer) {
         Long playerId = gamePlayer.getId();
-        List<GamePlayer> gamePlayers = this.game.getGamePlayers();
+        Game game = gamePlayer.getGame();
+        List<GamePlayer> gamePlayers = game.getGamePlayers();
 
         GamePlayer enemy = gamePlayers.stream()
                 .filter(player -> player.getId() != playerId )

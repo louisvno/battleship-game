@@ -19,33 +19,24 @@ public class Player {
 
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
-    //Properties
+
     private long id;
     private String firstName;
     private String lastName;
-    //one player can have many gameplayers
+
     @OneToMany(mappedBy = "player", fetch = FetchType.EAGER)
     private List <GamePlayer> gamePlayers;
 
-    //NOTE Default Constructor http://stackoverflow.com/questions/4488716/java-default-constructor
-    //Needed for deserialization (process of converting a JSON obj to an instance of a Java class)
+    @OneToMany(mappedBy="player", fetch=FetchType.EAGER)
+    private List <Score> scores;
 
-    //Algorithm Jackson calls new Player() to create an empty instance p1 of Player.
-    //For each key and value in obj (JSON), Jackson calls Setters e.g p1.setFirstName(value) or
-    // p1.firstName = value, whichever of these is public.
-
-    //This process will break if there is no no-argument constructor,
-    // if the JSON is ill-formed, or if the JSON contains keys that don't match object,
-    // or if the necessary field or setter is not public.
     public Player () {}
-    //Constructor
+
     public Player(String first, String last) {
         this.firstName = first;
         this.lastName = last;
     }
-    //Methods getters and setters
-    //These methods are used to get the data from the frontend and then set the data to create
-    //a new instance of a player
+
     public String getFirstName() {
         return firstName;
     }
@@ -65,7 +56,41 @@ public class Player {
     public long getId() {
         return id;
     }
+
     public String toString() {
         return (firstName + " " + lastName);
+    }
+
+    public double getTotalScore(){
+        return this.scores.stream()
+            .map(Score::getScore)
+                .reduce(0.0,(a, b) -> a + b);
+    }
+
+    public long getWins(){
+        return this.scores.stream()
+                .map(Score::getScore)
+                .filter(score -> score == 1.0)
+                .count();
+    }
+
+    public long getLosses(){
+        return this.scores.stream()
+                .map(Score::getScore)
+                .filter(score -> score == 0.0)
+                .count();
+    }
+
+    public long getTies(){
+        return this.scores.stream()
+                .map(Score::getScore)
+                .filter(score -> score == 0.5)
+                .count();
+    }
+
+    public long getGamesPlayed(){
+        return this.scores.stream()
+                .map(Score::getScore)
+                .count();
     }
 }

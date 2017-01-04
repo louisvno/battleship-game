@@ -3,7 +3,6 @@ package edu.example;
 import javax.persistence.*;
 import java.util.*;
 
-
 /**
  * Created by louis on 12/13/2016.
  */
