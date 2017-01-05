@@ -23,6 +23,9 @@ public class Player {
     private long id;
     private String firstName;
     private String lastName;
+    private String userName;
+    private String password;
+
 
     @OneToMany(mappedBy = "player", fetch = FetchType.EAGER)
     private List <GamePlayer> gamePlayers;
@@ -32,11 +35,28 @@ public class Player {
 
     public Player () {}
 
-    public Player(String first, String last) {
+    public Player(String first, String last, String user, String password) {
         this.firstName = first;
         this.lastName = last;
+        this.userName = user;
+        this.password = password;
+    }
+    
+    public String getUserName() {
+        return userName;
     }
 
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
     public String getFirstName() {
         return firstName;
     }

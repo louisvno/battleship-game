@@ -1,10 +1,24 @@
 package edu.example;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 //application context object = interface, does everything that the beanfactory does and more
+import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configurers.GlobalAuthenticationConfigurerAdapter;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,12 +30,6 @@ public class SalvoApplication {
         SpringApplication.run(SalvoApplication.class, args);
     }
 
-    //You use @Bean annotation to mark a method that returns an instance of a Java bean.
-// When Spring sees this, it will run the method and save the bean instance for later use.
-
-//the initData() method in the CommandLineRunner will need an instance of a PlayerRepository
-// Spring, as needed, will create an instance of a RestRepository and use it wherever one
-// is asked for.
     @Bean
     public CommandLineRunner initData(
             PlayerRepository playerRepo,
@@ -33,16 +41,16 @@ public class SalvoApplication {
 
         return (args) -> {
             //create a few players
-            Player p1 = new Player("Arnie", "Schwarz");
-            Player p2 = new Player("Silvester", "Stallone");
-            Player p3 = new Player("Jean Claude", "Vandamme");
-            Player p4 = new Player("Lionel", "Messi");
-            Player p5 = new Player("Eric", "Cartman");
-            Player p6 = new Player("Kanye", "West");
-            Player p7 = new Player("Donald", "Trump");
-            Player p8 = new Player("Penelope", "Cruz");
-            Player p9 = new Player("Tom", "Cruise");
-            Player p10 = new Player("Rutger", "Hauer");
+            Player p1 = new Player("Arnie", "Schwarz", "arnie1947", "terminator1");
+            Player p2 = new Player("Silvester", "Stallone", "Rambo", "erm844");
+            Player p3 = new Player("Jean Claude", "Vandamme", "Killer101", "hola908");
+            Player p4 = new Player("Lionel", "Messi", "Lio", "papoi90");
+            Player p5 = new Player("Eric", "Cartman", "Eric2000", "goinghome1");
+            Player p6 = new Player("Kanye", "West", "Fishstick", "aintnohobbit");
+            Player p7 = new Player("Donald", "Trump", "Donnie", "ilovehilary");
+            Player p8 = new Player("Penelope", "Cruz", "LaReina", "poiwe2");
+            Player p9 = new Player("Tom", "Cruise", "CaptainAwesome", "pppooe0");
+            Player p10 = new Player("Rutger", "Hauer", "Harry", "123456");
 
 
             //save the Players
@@ -107,20 +115,12 @@ public class SalvoApplication {
             loc5.add("J7");
 
             //create some ships
-            Ship ship1 = new Ship(type1,loc1,gp1);
-            Ship ship2 = new Ship(type2,loc2,gp1);
-            Ship ship3 = new Ship(type4,loc3,gp2);
-            Ship ship4 = new Ship(type1,loc4,gp3);
-            Ship ship5 = new Ship(type4,loc3,gp4);
-            Ship ship6 = new Ship(type4,loc5,gp4);
-
-            //Add ship to GamePlayer (store -> Java Instance) and  Gameplayer to ship (store ->Ship Database Table)
-//            gp1.addShip(ship2);
-//            gp1.addShip(ship1);
-//            gp2.addShip(ship3);
-//            gp3.addShip(ship4);
-//            gp4.addShip(ship5);
-//            gp4.addShip(ship6);
+            Ship ship1 = new Ship(type1, loc1, gp1);
+            Ship ship2 = new Ship(type2, loc2, gp1);
+            Ship ship3 = new Ship(type4, loc3, gp2);
+            Ship ship4 = new Ship(type1, loc4, gp3);
+            Ship ship5 = new Ship(type4, loc3, gp4);
+            Ship ship6 = new Ship(type4, loc5, gp4);
 
             //save ships
             shipRepo.save(ship1);
@@ -147,18 +147,12 @@ public class SalvoApplication {
             targ4.add("D10");
 
             //create some salvoes
-            Salvo salvo1 = new Salvo(targ1,gp1,1);
-            Salvo salvo2 = new Salvo(targ2,gp2,1);
-            Salvo salvo3 = new Salvo(targ3,gp3,1);
-            Salvo salvo4 = new Salvo(targ4,gp4,1);
-            Salvo salvo5 = new Salvo(targ1,gp4,2);
+            Salvo salvo1 = new Salvo(targ1, gp1, 1);
+            Salvo salvo2 = new Salvo(targ2, gp2, 1);
+            Salvo salvo3 = new Salvo(targ3, gp3, 1);
+            Salvo salvo4 = new Salvo(targ4, gp4, 1);
+            Salvo salvo5 = new Salvo(targ1, gp4, 2);
 
-            //Add salvo to GamePlayer (store -> Java Instance) and Gameplayer to salvo (store -> Database Salvo Table)
-//            gp1.fireSalvo(salvo1);
-//            gp2.fireSalvo(salvo2);
-//            gp3.fireSalvo(salvo3);
-//            gp4.fireSalvo(salvo4);
-//            gp4.fireSalvo(salvo5);
 
             salvoRepo.save(salvo1);
             salvoRepo.save(salvo2);
@@ -166,12 +160,12 @@ public class SalvoApplication {
             salvoRepo.save(salvo4);
             salvoRepo.save(salvo5);
 
-            Score score1 = new Score(p1,g1,1.0);
-            Score score2 = new Score(p2,g1,0.0);
-            Score score3 = new Score(p3,g2,1.0);
-            Score score4 = new Score(p2,g2,1.0);
-            Score score5 = new Score(p2,g2,1.0);
-            Score score6 = new Score(p2,g2,1.0);
+            Score score1 = new Score(p1, g1, 1.0);
+            Score score2 = new Score(p2, g1, 0.0);
+            Score score3 = new Score(p3, g2, 1.0);
+            Score score4 = new Score(p2, g2, 1.0);
+            Score score5 = new Score(p2, g2, 1.0);
+            Score score6 = new Score(p2, g2, 1.0);
 
             ScoreRepo.save(score1);
             ScoreRepo.save(score2);
@@ -180,9 +174,56 @@ public class SalvoApplication {
             ScoreRepo.save(score5);
             ScoreRepo.save(score6);
 
-
-
         };
     }
-
 }
+
+@Configuration
+class WebSecurityConfiguration extends GlobalAuthenticationConfigurerAdapter {
+
+    @Autowired
+    PlayerRepository playerRepo;
+
+    @Override
+    public void init(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(userDetailsService());
+    }
+
+    @Bean
+    UserDetailsService userDetailsService() {
+        return new UserDetailsService() {
+
+            @Override
+            public UserDetails loadUserByUsername(String name) throws UsernameNotFoundException {
+                List<Player> players = playerRepo.findByUserName(name);
+                if (!players.isEmpty()) {
+                    Player player = players.get(0);
+                    return new User(player.getUserName(), player.getPassword(),
+                            AuthorityUtils.createAuthorityList("USER"));
+                } else {
+                    throw new UsernameNotFoundException("Unknown user: " + name);
+                }
+            }
+        };
+    }
+}
+
+
+
+@EnableWebSecurity
+@Configuration
+class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http.authorizeRequests()
+                .antMatchers("/games.html",
+                        "/styles/**",
+                        "/scripts/**").permitAll()
+                .anyRequest().authenticated()
+                .and()
+                .httpBasic();
+    }
+}
+
+
