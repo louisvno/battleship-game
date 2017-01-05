@@ -1,6 +1,8 @@
 package edu.example;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,12 +29,17 @@ public class SalvoController {
     private PlayerRepository players;
 
     @RequestMapping("/games")
-    private List<Object> mapAllGames() {
+    private Map<String, Object> mapAllGames(Authentication auth) {
         //findAll() returns the list of games instances
-        return
-                games.findAll().stream()
-                        .map(game -> makeGameDTO(game))
-                        .collect(toList());
+        Map<String, Object> dto = new LinkedHashMap<>();
+
+        if(!isGuest(auth))
+            dto.put("currentPlayer", makePlayerDTO(getCurrentPlayer(auth)));
+
+        dto.put("games", games.findAll().stream()
+                .map(game -> makeGameDTO(game))
+                .collect(toList()));
+        return dto;
     }
 
     @RequestMapping("/player_stats")
@@ -43,7 +50,7 @@ public class SalvoController {
         return makePlayerStatsDTO(allPlayers);
 
     }
-    //TODO ask about Object
+
     @RequestMapping("/game_view/{gamePlayerId}")
     private Object mapGameByGamePlayerId(@PathVariable Long gamePlayerId) {
         //findOne() returns the instance of gamePlayer with the ID that you pass as parameter
@@ -51,8 +58,7 @@ public class SalvoController {
 
         return makeGameViewDTO(gamePlayer);
     }
-    //TODO finish dto mapping
-    //rank, player(id, firstname), total score
+
     private Map<String, Object> makePlayerStatsDTO(List<Player> allPlayers){
         Map<String, Object> dto = new LinkedHashMap<>();
 
@@ -67,15 +73,6 @@ public class SalvoController {
 
         return dto;
     }
-//    private Map<String, Object> makeRankDTO(List<Player> players) {
-//        Map<String, Object> dto = new LinkedHashMap<>();
-//        int i= 1;
-//        for(Player p : players) {
-//            dto.put(Integer.valueOf(i).toString(), makeRankedPlayerDTO(p));
-//            i++;
-//        }
-//        return dto;
-//    }
 
     private Map<String, Object> makePlayerStatsDTO(Player player) {
         Map<String, Object> dto = new LinkedHashMap<>();
@@ -237,4 +234,11 @@ public class SalvoController {
         return enemy;
     }
 
+    private Player getCurrentPlayer(Authentication auth){
+        return players.findByUserName(auth.getName()).get(0);
+    }
+
+    private boolean isGuest(Authentication auth) {
+        return auth == null || auth instanceof AnonymousAuthenticationToken;
+    }
 }
