@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-//application context object = interface, does everything that the beanfactory does and more
 import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -209,7 +208,6 @@ class WebSecurityConfiguration extends GlobalAuthenticationConfigurerAdapter {
 }
 
 
-
 @EnableWebSecurity
 @Configuration
 class WebSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -217,7 +215,7 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/games.html",
+                .antMatchers("/api/games","/games.html",
                         "/styles/**",
                         "/scripts/**").permitAll()
                 .anyRequest().authenticated()
