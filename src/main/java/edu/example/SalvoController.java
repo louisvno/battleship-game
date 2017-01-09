@@ -1,17 +1,17 @@
 package edu.example;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
+import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.FORBIDDEN;
 
 
 /**
@@ -57,6 +57,20 @@ public class SalvoController {
         GamePlayer gamePlayer = gamePlayers.findOne(gamePlayerId);
 
         return makeGameViewDTO(gamePlayer);
+    }
+
+    @RequestMapping(value = "/players", method=RequestMethod.POST)
+    public ResponseEntity <String> addNewUser(@RequestParam String username, @RequestParam String password) {
+        //validate input
+
+        //check with database if username is already in use
+        if(players.findByUserNameIgnoreCase(username) == null){
+            Player player = new Player (username,password);
+            players.save(player);
+            return new ResponseEntity<>(CREATED);
+        } else {
+            return new ResponseEntity<>("username already exists",FORBIDDEN);
+        }
     }
 
     private Map<String, Object> makePlayerStatsDTO(List<Player> allPlayers){
@@ -177,6 +191,7 @@ public class SalvoController {
         Map<String, Object> dto = new LinkedHashMap<>();
            dto.put("id", player.getId());
            dto.put("firstName", player.getFirstName());
+           dto.put("userName", player.getUserName());
         return dto;
     }
 

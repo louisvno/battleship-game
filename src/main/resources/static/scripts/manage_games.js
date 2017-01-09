@@ -13,7 +13,7 @@ function loadGames(){
              error: function (){
                $('#games-list').html('<span>Games list unavailable</span>');
              }
-          });
+    });
 }
 
 function renderGamesList(games){
@@ -27,7 +27,7 @@ function addGames(games){
                    "<ul>"+
                       "<li>"+ game.id + "</li>" +
                        addPlayers(game) +
-                      "<li>"+ game.created + "</li>" +
+                      "<li>created:"+ new Date(game.created) + "</li>" +
                    "</ul>" +
                    addJoinButton(game) +
               "<div>";
@@ -47,7 +47,7 @@ function addPlayers (game){
       Object.keys(game.gamePlayers).forEach(key => {
            str +=
            "<li>" +
-             game.gamePlayers[key].player.firstName +
+             game.gamePlayers[key].player.userName +
            "</li>"
       })
     return str;

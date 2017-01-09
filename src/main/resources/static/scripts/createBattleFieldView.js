@@ -4,48 +4,48 @@ function createGameDisplay (destination){
 
     var table = document.getElementById(destination);
     var createTableHeaders = table.appendChild(
-            newColumnHeaderRow(columnHeaders)
+            addColumnHeaderRow(columnHeaders)
             );
     var createTableBody = rowHeaders.forEach( header => {
             table.appendChild(
-                newTableRow(header,columnHeaders)
+                addTableRow(header,columnHeaders)
             );
     });
 }
 
-function newTableRow(rowHeader,columnHeaders){
-    var tr = newTableRowElement();
-    var th = newTableHeaderElement();
+function addTableRow(rowHeader,columnHeaders){
+    var tr = addTableRowElement();
+    var th = addTableHeaderElement();
     th.textContent = rowHeader;
     tr.appendChild(th);
 
     for(i=1; i < columnHeaders.length; i++){
-      var td = newTableDataElement();
+      var td = addTableDataElement();
       td.classList.add(rowHeader + columnHeaders[i]);
       tr.appendChild(td);
     }
     return tr;
 }
 
-function newColumnHeaderRow(headers){
-    var tr = newTableRowElement();
+function addColumnHeaderRow(headers){
+    var tr = addTableRowElement();
     headers.forEach(function(header, index){
-        var th = newTableHeaderElement();
+        var th = addTableHeaderElement();
         th.textContent = header;
         tr.appendChild(th);
     })
     return tr;
 }
 
-function newTableHeaderElement(){
+function addTableHeaderElement(){
   return document.createElement("th");
 }
 
-function newTableElement(){
+function addTableElement(){
   return document.createElement("th");
 }
 
-function newTableDataElement(){
+function addTableDataElement(){
   return document.createElement("td");
 }
 
