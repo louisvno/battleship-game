@@ -202,10 +202,10 @@ class WebSecurityConfiguration extends GlobalAuthenticationConfigurerAdapter {
                     Player player = players.get(0);
                     return new User(player.getUserName(), player.getPassword(),
                             AuthorityUtils.createAuthorityList("USER"));
-                } else {
-                    throw new UsernameNotFoundException("Unknown user: " + name);
-                }
-            }
+        } else {
+            throw new UsernameNotFoundException("Unknown user: " + name);
+        }
+    }
         };
     }
 }

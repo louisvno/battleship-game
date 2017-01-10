@@ -10,12 +10,15 @@ function viewController(currentPlayer){
          //show
              $(".join-button").show();
              $("#logout").show();
+             $("#new-game").show();
+
          } else {
          //hide
               $(".join-button").hide();
               $("#player-info").hide();
-         //show
-              $("#new-game").show();
+              $("#new-game").hide();
+              $("#new-game").hide();
+              $("#logout").hide();
          }
 }
 
@@ -25,7 +28,10 @@ function loadGames(){
              dataType: "json",
              success: function (data) {
                     renderGamesList(data.games);
+
+                    setUserInfo(data.currentPlayer);
                     viewController(data.currentPlayer)
+
              },
              error: function (){
                $('#games-list').html('<span>Games list unavailable</span>');
@@ -70,11 +76,16 @@ function addPlayers (game){
     return str;
 }
 
+function setUserInfo(currentPlayer){
+    if(currentPlayer){
+    $("#player-info").html("<span>Hi there</span> " + currentPlayer.firstName)
+    };
+}
 
 $(document).on('submit', '#login-form', function(e) {
    e.preventDefault();
-    var username = this["0"].value;
-    var password = this["1"].value;
+    var username = $(this).find('input[name="username"]').val();
+    var password = $(this).find('input[name="password"]').val();
     login (username,password);
 });
 
@@ -98,15 +109,14 @@ $(document).on('submit', '#signup-form', function(e) {
                 url: "/api/players",
                 data: {
                        username: username,
-                       password: password
-                      // firstname: values.firstname,
-                      // lastname: values.lastname
+                       password: password,
+//                       firstname: values.firstname,
+//                       lastname: values.lastname
                        },
                 dataType: "json",
                 statusCode: {201: function() {
                                 console.log("Username:" + username);
                                 login (username,password);
-
                             }
                 }
     });
