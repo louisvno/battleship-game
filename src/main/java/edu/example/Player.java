@@ -36,7 +36,7 @@ public class Player {
     public Player () {}
 
     public Player(String userName, String password) {
-        new Player("", "", userName,password);
+        this("", "", userName,password);
     }
 
     public Player(String first, String last, String user, String password) {

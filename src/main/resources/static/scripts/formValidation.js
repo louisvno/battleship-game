@@ -35,28 +35,3 @@ $(function() {
   });
 });
 
-$(document).on('submit', '#login-form', function(e) {
-   e.preventDefault();
-    var username = this["0"].value;
-    var password = this["1"].value;
-    $.ajax({ method:"POST",
-                url: "/api/login",
-                data: {username: username,  password: password },
-                dataType: "json",
-                statusCode: {
-                            200: function() {
-                              $.get("/api/games");
-                            }
-                }
-    });
-});
-
-$("#logout-button").click( function(e) {
-   e.preventDefault();
-    $.ajax({
-        method:"POST",
-        url: "/api/logout",
-        dataType: "json"
-    });
-});
-
