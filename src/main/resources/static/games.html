@@ -8,14 +8,39 @@
             src="https://code.jquery.com/jquery-3.1.1.min.js"
             integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
             crossorigin="anonymous"></script>
+    <script
+            src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.15.0/jquery.validate.min.js">
+
+    </script>
 </head>
 <body>
-    <ol>
-        <li >
+    <section id="games"></section>
 
-        </li>
-    </ol>
+    <section id="login">
+        <form action="" id="login-form" method="POST">
+            <input type="text" name="username" placeholder="Username">
+            <input type="password" name="password" placeholder="Password">
+        </form>
 
+        <button type="submit" form="login-form">Login</button>
+    </section>
 
+    <section id="logout">
+        <button id="logout-button">Log out</button>
+    </section>
+
+    <section id="signup">
+        <form name="signupform" id="signup-form" action="http://localhost:8080/api/players" method="POST">
+            <label for="first-name"></label>
+            <input type="text" id="first-name" name="firstname" placeholder="First name">
+            <input type="text" id="last-name" name="lastname" placeholder="Last name">
+            <input type="text" id="username" name="username" placeholder="Username">
+            <input type="password" id="password" name="password" placeholder="Password">
+            <input type="password" id="password-check" name="passwordcheck" placeholder="Type Password again">
+        </form>
+
+        <button type="submit" form="signup-form">Sign up</button>
+    </section>
+    <script src="/scripts/formValidation.js"></script>
 </body>
 </html>
