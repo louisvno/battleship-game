@@ -14,22 +14,26 @@ function getParameterByName(name, url) {
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
- // pass http service to the controller
 function loadGameData(gamePlayerId){
-      $.get("/api/game_view/" + gamePlayerId, function(response){
-         //get data from JSON so that might the data structure change only has to be changed here
-         var gamePlayers = response.gamePlayers,
-         salvoes = response.salvoes,
-         player = gamePlayers[gamePlayerId],
-         playerSalvoes = salvoes[gamePlayerId],
-         playerFleet = response.fleet,
-         enemyId = getEnemyId(gamePlayers,gamePlayerId),
-         enemy = gamePlayers[enemyId],
-         enemySalvoes = response.salvoes[enemyId];
+      $.ajax({ url:"/api/game_view/" + gamePlayerId,
+               method:"GET",
+               success: function(response){
+             //map data from JSON so that might the data structure change only has to be changed here
+                     var gamePlayers = response.gamePlayers,
 
+                     salvoes = response.salvoes,
+                     player = gamePlayers[gamePlayerId],
+                     playerSalvoes = salvoes[gamePlayerId],
+                     playerFleet = response.fleet,
+                     enemyId = getEnemyId(gamePlayers,gamePlayerId),
+                     enemy = gamePlayers[enemyId],
+                     enemySalvoes = response.salvoes[enemyId];
 
-         renderGameView (playerFleet, player,playerSalvoes, enemy,enemySalvoes, playerFleet)
-      });
+                     renderGameView (playerFleet, player,playerSalvoes, enemy,enemySalvoes, playerFleet)
+              },
+              statusCode: {403: function(){window.location = "/games.html";}
+              }
+          });
  }
 
 function renderGameView (playerFleet, player,playerSalvoes, enemy,enemySalvoes, playerFleet){

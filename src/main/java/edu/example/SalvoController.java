@@ -33,7 +33,7 @@ public class SalvoController {
     @Autowired
     private PlayerRepository players;
 
-    @RequestMapping("/games")
+    @RequestMapping(value= "/games", method=RequestMethod.GET)
     private Map<String, Object> mapAllGames(Authentication auth) {
         //findAll() returns the list of games instances
         Map<String, Object> dto = new LinkedHashMap<>();
@@ -47,6 +47,22 @@ public class SalvoController {
         return dto;
     }
 
+    @RequestMapping(value = "/games", method=RequestMethod.POST)
+    private ResponseEntity <Object> createNewGame(Authentication auth) {
+
+        if(!isGuest(auth)){
+            Player player = getCurrentPlayer(auth);
+            Game game = new Game();
+            games.save(game);
+            GamePlayer gamePlayer = new GamePlayer(player, game);
+            gamePlayers.save(gamePlayer);
+            Map <String,Long> dto = new HashMap<>();
+            dto.put("id",gamePlayer.getId());
+            return new ResponseEntity(dto ,CREATED);}
+
+        else return new ResponseEntity(FORBIDDEN);
+    }
+
     @RequestMapping("/player_stats")
     private Object mapLeaderBoard() {
         List<Player> allPlayers = players.findAll();
@@ -55,10 +71,9 @@ public class SalvoController {
 
     @RequestMapping("/game_view/{gamePlayerId}")
     private Object mapGameByGamePlayerId(@PathVariable Long gamePlayerId, Authentication auth) {
-        //findOne() returns the instance of gamePlayer with the ID that you pass as parameter
-        //if gameplaye
-        GamePlayer gamePlayer = gamePlayers.findOne(gamePlayerId);
 
+        GamePlayer gamePlayer = gamePlayers.findOne(gamePlayerId);
+        //check if gameplayer belongs to the player that logged in
         if(gamePlayer.getPlayer().getUserName()== auth.getName())
             return makeGameViewDTO(gamePlayer);
             else return new ResponseEntity(FORBIDDEN);
