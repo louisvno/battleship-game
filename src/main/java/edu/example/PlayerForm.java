@@ -8,7 +8,7 @@ import javax.validation.constraints.Size;
  */
 public class PlayerForm {
     @NotNull
-    @Size(min=2, max=10)
+    @Size(min=3, max=10)
     private String username;
 
     @NotNull

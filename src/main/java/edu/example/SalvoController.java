@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.validation.BindingResult;
@@ -63,12 +64,15 @@ public class SalvoController {
     }
 
     @RequestMapping(value = "/players", method=RequestMethod.POST)
-    public ResponseEntity <String> addNewUser(@Valid PlayerForm playerForm, BindingResult bindingResult,
-    @RequestParam("username") String username, @RequestParam("password") String password) {
-        //TODO validate input
+    public ResponseEntity <Object> addNewUser(@Valid PlayerForm playerForm,
+                                              BindingResult bindingResult,
+                                              @RequestParam("username") String username,
+                                              @RequestParam("password") String password){
+
             if (bindingResult.hasErrors()) {
-                return new ResponseEntity<>(bindingResult.getAllErrors().toString(),FORBIDDEN);
+                return new ResponseEntity<>(makeErrorDTO(bindingResult.getFieldErrors()),FORBIDDEN);
             }else{
+                //database validation
                 if(players.findByUserNameIgnoreCase(username) == null){
                     Player player = new Player (username,password);
                     players.save(player);
@@ -77,15 +81,13 @@ public class SalvoController {
                     return new ResponseEntity<>("username already exists",FORBIDDEN);
                 }
             }
+    }
 
-        //check with database if username is already in use
-//        if(players.findByUserNameIgnoreCase(username) == null){
-//            Player player = new Player (username,password);
-//            players.save(player);
-//            return new ResponseEntity<>(CREATED);
-//        } else {
-//            return new ResponseEntity<>("username already exists",FORBIDDEN);
-//        }
+    private Map<String, String> makeErrorDTO(List<FieldError> fieldErrors){
+        Map<String, String> dto = new LinkedHashMap<>();
+        fieldErrors.forEach(error ->
+            dto.put(error.getField(),error.getDefaultMessage()));
+        return dto;
     }
 
     private Map<String, Object> makePlayerStatsDTO(List<Player> allPlayers){
