@@ -1,6 +1,7 @@
 package edu.example;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -48,19 +49,19 @@ public class SalvoController {
 
     @RequestMapping("/player_stats")
     private Object mapLeaderBoard() {
-
         List<Player> allPlayers = players.findAll();
-
         return makePlayerStatsDTO(allPlayers);
-
     }
 
     @RequestMapping("/game_view/{gamePlayerId}")
-    private Object mapGameByGamePlayerId(@PathVariable Long gamePlayerId) {
+    private Object mapGameByGamePlayerId(@PathVariable Long gamePlayerId, Authentication auth) {
         //findOne() returns the instance of gamePlayer with the ID that you pass as parameter
+        //if gameplaye
         GamePlayer gamePlayer = gamePlayers.findOne(gamePlayerId);
 
-        return makeGameViewDTO(gamePlayer);
+        if(gamePlayer.getPlayer().getUserName()== auth.getName())
+            return makeGameViewDTO(gamePlayer);
+            else return new ResponseEntity(FORBIDDEN);
     }
 
     @RequestMapping(value = "/players", method=RequestMethod.POST)
@@ -76,9 +77,9 @@ public class SalvoController {
                 if(players.findByUserNameIgnoreCase(username) == null){
                     Player player = new Player (username,password);
                     players.save(player);
-                    return new ResponseEntity<>(CREATED);
+                    return new ResponseEntity(CREATED);
                 } else {
-                    return new ResponseEntity<>("username already exists",FORBIDDEN);
+                    return new ResponseEntity("username already exists",FORBIDDEN);
                 }
             }
     }

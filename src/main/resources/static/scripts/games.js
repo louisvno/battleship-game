@@ -74,7 +74,7 @@ function addContinueGameButton(game,currentPlayer){
 function addJoinButton(game){
      var ids = Object.keys(game.gamePlayers);
      if (ids.length < 2 ){
-         return "<button class='join-button'>Join</button>";
+         return "<button class='join-button'>Join Game</button>";
      } else
      return "";
  }
