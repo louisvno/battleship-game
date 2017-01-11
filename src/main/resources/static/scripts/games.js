@@ -1,3 +1,4 @@
+//TODO hide join button if player is already in game
 $(function(){
     loadGames()
 });
@@ -143,6 +144,17 @@ $("#logout-button").click( function(e) {
         url: "/api/logout",
         dataType: "json",
         statusCode: {200: function() {location.reload();}
+        }
+    });
+});
+
+$("#new-game").click( function(e) {
+    e.preventDefault();
+    $.ajax({
+        method:"POST",
+        url: "/api/games",
+        dataType: "json",
+        statusCode: {201: function(response) {window.location="/game.html?gp="+ response.id;}
         }
     });
 });
