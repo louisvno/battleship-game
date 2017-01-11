@@ -49,6 +49,6 @@ function addTableDataElement(){
   return document.createElement("td");
 }
 
-function newTableRowElement(){
+function addTableRowElement(){
   return document.createElement("tr");
 }

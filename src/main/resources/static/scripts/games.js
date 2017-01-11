@@ -27,7 +27,7 @@ function loadGames(){
              url: "/api/games",
              dataType: "json",
              success: function (data) {
-                    renderGamesList(data.games);
+                    renderGamesList(data);
 
                     setUserInfo(data.currentPlayer);
                     viewController(data.currentPlayer)
@@ -39,12 +39,12 @@ function loadGames(){
     });
 }
 
-function renderGamesList(games){
-    $('#games-list').html(addGames(games));
+function renderGamesList(data){
+    $('#games-list').html(addGames(data));
 }
 
-function addGames(games){
-   return games.reduce(function(str,game){
+function addGames(data){
+   return data.games.reduce(function(str,game){
       return  str +
               "<div class='game-card'>" +
                    "<ul>"+
@@ -53,17 +53,31 @@ function addGames(games){
                       "<li>created:"+ new Date(game.created) + "</li>" +
                    "</ul>" +
                    addJoinButton(game) +
+                   addContinueGameButton(game,data.currentPlayer) +
               "<div>";
     },"");
 }
 
+function addContinueGameButton(game,currentPlayer){
+        var gamePlayerIds = Object.keys(game.gamePlayers);
+        var str="";
+
+        if(currentPlayer && gamePlayerIds.length === 2 ){
+             gamePlayerIds.forEach(function(id){
+                if(game.gamePlayers[id].player["id"] === currentPlayer.id){
+                    str = "<a href='game.html?gp=" + id + "'" + " class='join-button'>Continue Game</a>";
+             }})
+        };
+        return str;
+ }
+
 function addJoinButton(game){
-    var ids = Object.keys(game.gamePlayers);
-    if (ids.length < 2 ){
-        return "<button class='join-button'>Join</button>";
-    } else
-    return "";
-}
+     var ids = Object.keys(game.gamePlayers);
+     if (ids.length < 2 ){
+         return "<button class='join-button'>Join</button>";
+     } else
+     return "";
+ }
 
 function addPlayers (game){
     var str = "";
