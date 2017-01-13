@@ -1,3 +1,108 @@
+/**************
+*   Global Variables
+**************/
+var shipsAvailable = [{
+                     shipType : "Aircraft-carrier",
+                     shipLocations : [],
+                     shipLength : 5
+                     },{
+                     shipType : "Destroyer",
+                     shipLocations : [],
+                     shipLength : 4
+                     },{
+                     shipType : "Destroyer",
+                     shipLocations : [],
+                     shipLength : 4
+                     },{
+                     shipType : "Submarine",
+                     shipLocations : [],
+                     shipLength : 3
+                     },{
+                     shipType : "Submarine",
+                     shipLocations : [],
+                     shipLength : 3
+                     },{
+                     shipType : "Submarine",
+                     shipLocations : [],
+                     shipLength : 3
+                     },{
+                     shipType : "Patrolboat",
+                     shipLocations : [],
+                     shipLength : 2
+                     },{
+                     shipType : "Patrolboat",
+                     shipLocations : [],
+                     shipLength : 2
+                     },{
+                     shipType : "Patrolboat",
+                     shipLocations : [],
+                     shipLength : 2
+                     },{
+                     shipType : "Patrolboat",
+                     shipLocations : [],
+                     shipLength : 2
+                     }];
+var playerShips = [];
+var tempLocations=[];
+
+
+function clearTempLocations () {
+   tempLocations.forEach(function(loc){
+             $('#fleet-display td[data-coordinate=' + loc + "]").removeClass("temp-ship");
+          })
+   tempLocations=[];
+}
+
+//Ship placement UI functions
+function setShipPlacementEvents(){
+
+    $('#fleet-display').on('mouseover',"td", function (e){
+       if (tempLocations.length !== 0){
+       clearTempLocations();
+       }
+       var firstCoordinate = e.target.getAttribute("data-coordinate");
+
+       if (shipsAvailable.length !== 0) {
+           tempLocations = getShipLocationsHorizontal(firstCoordinate,shipsAvailable[0].shipLength);
+           tempLocations.forEach(function(loc){
+              $('#fleet-display td[data-coordinate=' + loc + "]").addClass("temp-ship");
+           })
+       }
+    });
+
+    $('#fleet-display').on('click',"td", function (e){
+        if(isValidPlacement() && shipsAvailable.length !== 0){
+            shipsAvailable[0].shipLocations = tempLocations;
+            tempLocations.forEach(function(loc){
+                $('#fleet-display td[data-coordinate=' + loc + "]").addClass("ship");
+            })
+            playerShips.push(shipsAvailable.shift());
+          //  console.log(playerShips);
+            clearTempLocations();
+        }
+    });
+};
+
+function isValidPlacement(){
+    var checks=[];
+    tempLocations.forEach(function(loc){
+        checks.push($('#fleet-display td[data-coordinate=' + loc + "]").hasClass("ship"));
+    });
+    console.log(checks.every(function (check){return check === false}))
+    return checks.every(function (check){return check === false});
+}
+
+function getShipLocationsHorizontal(firstCoordinate,shipLength){
+    var xCoordinate = Number(firstCoordinate.split("").pop());
+    var yCoordinate = firstCoordinate.split("").shift();
+    var shipLocations =[];
+
+    for (var i=0; i < shipLength; i++){
+        shipLocations.push(yCoordinate + (xCoordinate + i));
+    }
+    return shipLocations;
+}
+
 //UI controller
 loadGameData(getParameterByName("gp"));
 
@@ -12,6 +117,27 @@ function getParameterByName(name, url) {
     if (!results) return null;
     if (!results[2]) return '';
     return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
+
+function setShip (){
+    playerShips.push();
+    shipsAvailable.shift();
+}
+
+function createShips (gamePlayerId) {
+    $.ajax({ method:"POST",
+             url: "/api/games/players/" + gamePlayerId + "/ships",
+             contentType:"application/json",
+             data: JSON.stringify ([{
+                            "shipType" : "destroyer",
+                            "shipLocations" : ["A1","A2"]
+                            },
+                            {
+                            "shipType" : "boat",
+                            "shipLocations" : ["B1","B2"]
+                            }]),
+             success: function(){location.reload()}
+    });
 }
 
 function loadGameData(gamePlayerId){
@@ -39,17 +165,28 @@ function loadGameData(gamePlayerId){
 function renderGameView (playerFleet, player,playerSalvoes, enemy,enemySalvoes, playerFleet){
      createGameDisplay ("fleet-display");
      createGameDisplay ("battlefield-display");
+     renderShipList(shipsAvailable);
      showPlayerFleet(playerFleet);
      showGamePlayerNames (player, enemy);
      showHitsReceived(enemySalvoes);
      showHits(playerSalvoes);
      showMissed(playerSalvoes);
+     setShipPlacementEvents();
+}
+
+function renderShipList(shipsAvailable) {
+    str="";
+   shipsAvailable.forEach(function(ship){
+        str += "<li>" + ship.shipType + "</li>";
+    });
+
+    $("#ship-list").html(str);
 }
 
 function showPlayerFleet(fleet) {
     fleet.forEach( function(ship){
         ship.locations.forEach(function (location){
-            var $loc = $('#fleet-display .' + location);
+            var $loc = $('#fleet-display td[data-coordinate=' + location + "]");
             $loc.addClass("ship");
         })
     })

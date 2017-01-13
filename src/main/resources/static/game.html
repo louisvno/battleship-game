@@ -14,16 +14,25 @@
     <script src="scripts/createBattleFieldView.js"></script>
     <script src="scripts/gameApp.js"></script>
 </head>
-<body ">
+<body>
     <div class="wrapper">
     <section id="game-info">
         <span id="player-name"></span>
         <span>VS.</span>
         <span id="enemy-name"></span>
     </section>
+
+    <aside id="available-ship-list">
+        <ul id="ship-list">
+
+        </ul>
+    </aside>
+
     <section id="fleet">
+        <h2>Deploy your fleet and press Ready!</h2>
         <h2>Your fleet status</h2>
         <table id="fleet-display"></table>
+        <button>Ready!</button>
     </section>
 
     <section id="battlefield">

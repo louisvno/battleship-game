@@ -56,3 +56,10 @@ th {
     max-width:500px;
 }
 
+#ship-list li:first-of-type{
+    color:white;
+}
+
+td.temp-ship{
+    background-color:blue;
+}

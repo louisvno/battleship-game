@@ -10,9 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.FetchType;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 
 @Entity
@@ -24,7 +22,7 @@ public class Game {
     private Date creationDate = new Date();
 
     @OneToMany(mappedBy="game", fetch=FetchType.EAGER)
-    private List <GamePlayer> gamePlayers = new ArrayList<>();
+    private Set<GamePlayer> gamePlayers = new HashSet<>();
 
     @OneToMany(mappedBy="game", fetch=FetchType.EAGER)
     private List <Score> scores;
@@ -40,7 +38,7 @@ public class Game {
 
 
     //Methods getters and setters
-    public List <GamePlayer> getGamePlayers (){
+    public Set <GamePlayer> getGamePlayers (){
         return gamePlayers;
     }
 
@@ -56,5 +54,14 @@ public class Game {
         return id;
     }
 
+    public boolean isFull(){
+        if(this.gamePlayers.size() < 2)
+            return false;
+            else return true;
+    }
 
+    public boolean hasPlayer (Player player){
+        return this.getGamePlayers().stream()
+                .anyMatch(gp -> gp.getPlayer() == player);
+    }
 }

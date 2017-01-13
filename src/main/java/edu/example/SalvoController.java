@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 import static java.util.stream.Collectors.toList;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
+import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 
 /**
@@ -32,6 +33,8 @@ public class SalvoController {
     private GamePlayerRepository gamePlayers;
     @Autowired
     private PlayerRepository players;
+    @Autowired
+    private ShipRepository shipsRepo;
 
     @RequestMapping(value= "/games", method=RequestMethod.GET)
     private Map<String, Object> mapAllGames(Authentication auth) {
@@ -63,6 +66,48 @@ public class SalvoController {
         else return new ResponseEntity(FORBIDDEN);
     }
 
+    @RequestMapping(value = "/games/players/{gamePlayerId}/ships", method=RequestMethod.POST)
+    private ResponseEntity <HttpStatus> createShips(@RequestBody Set<Ship> ships,
+                                                @PathVariable Long gamePlayerId,
+                                                Authentication auth){
+
+        Player player = getCurrentPlayer(auth);
+        GamePlayer gamePlayer = gamePlayers.findOne(gamePlayerId);
+
+        if (!isGuest(auth) && player.hasGamePlayer(gamePlayerId)){
+            if (gamePlayer.getFleet().isEmpty()) {
+
+                ships.forEach(ship -> ship.setGamePlayer(gamePlayer));
+                ships.forEach(ship -> shipsRepo.save(ship));
+
+                return new ResponseEntity(CREATED);
+            }else
+                return new ResponseEntity(FORBIDDEN);
+        }else
+            return new ResponseEntity(UNAUTHORIZED);
+    }
+
+
+    @RequestMapping(value = "/game/{gameId}/players", method=RequestMethod.POST)
+    private ResponseEntity <Object> joinGame(@PathVariable Long gameId, Authentication auth) {
+        Game game = games.findOne(gameId);
+        if(!isGuest(auth) && game != null && !game.isFull()){
+            Player player = getCurrentPlayer(auth);
+
+            if (!game.hasPlayer(player)){
+            GamePlayer gamePlayer = new GamePlayer(player, game);
+            gamePlayers.save(gamePlayer);
+
+            Map <String,Long> dto = new HashMap<>();
+            dto.put("id",gamePlayer.getId());
+            return new ResponseEntity(dto,CREATED);
+            }
+            else return new ResponseEntity(FORBIDDEN);
+        }
+        else return new ResponseEntity(FORBIDDEN);
+    }
+
+
     @RequestMapping("/player_stats")
     private Object mapLeaderBoard() {
         List<Player> allPlayers = players.findAll();
@@ -86,17 +131,17 @@ public class SalvoController {
                                               @RequestParam("password") String password){
 
             if (bindingResult.hasErrors()) {
-                return new ResponseEntity<>(makeErrorDTO(bindingResult.getFieldErrors()),FORBIDDEN);
-            }else{
-                //database validation
-                if(players.findByUserNameIgnoreCase(username) == null){
-                    Player player = new Player (username,password);
-                    players.save(player);
-                    return new ResponseEntity(CREATED);
-                } else {
-                    return new ResponseEntity("username already exists",FORBIDDEN);
-                }
+            return new ResponseEntity<>(makeErrorDTO(bindingResult.getFieldErrors()),FORBIDDEN);
+        }else{
+            //database validation
+            if(players.findByUserNameIgnoreCase(username) == null){
+                Player player = new Player (username,password);
+                players.save(player);
+                return new ResponseEntity(CREATED);
+            } else {
+                return new ResponseEntity("username already exists",FORBIDDEN);
             }
+        }
     }
 
     private Map<String, String> makeErrorDTO(List<FieldError> fieldErrors){
@@ -148,7 +193,7 @@ public class SalvoController {
         return dto;
     }
 
-    private Map <String, Object> mapSalvoes(List <GamePlayer> gamePlayers){
+    private Map <String, Object> mapSalvoes(Set <GamePlayer> gamePlayers){
         Map<String, Object> dto = new LinkedHashMap<>();
 
         gamePlayers.forEach(gamePlayer -> {
@@ -205,7 +250,7 @@ public class SalvoController {
 
     private Map<String, Object> mapGamePlayersFromGame(Game game) {
         Map<String, Object> dto = new LinkedHashMap<>();
-        List<GamePlayer> gamePlayers = game.getGamePlayers();
+        Set<GamePlayer> gamePlayers = game.getGamePlayers();
         gamePlayers.forEach( gamePlayer ->
                 dto.put(
                         Long.valueOf(gamePlayer.getId()).toString()
@@ -272,7 +317,7 @@ public class SalvoController {
     private GamePlayer getEnemy (GamePlayer gamePlayer) {
         Long playerId = gamePlayer.getId();
         Game game = gamePlayer.getGame();
-        List<GamePlayer> gamePlayers = game.getGamePlayers();
+        Set<GamePlayer> gamePlayers = game.getGamePlayers();
 
         GamePlayer enemy = gamePlayers.stream()
                 .filter(player -> player.getId() != playerId )
@@ -289,4 +334,6 @@ public class SalvoController {
     private boolean isGuest(Authentication auth) {
         return auth == null || auth instanceof AnonymousAuthenticationToken;
     }
+
+
 }

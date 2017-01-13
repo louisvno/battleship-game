@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.FetchType;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by louis on 12/5/2016.
@@ -28,7 +29,7 @@ public class Player {
 
 
     @OneToMany(mappedBy = "player", fetch = FetchType.EAGER)
-    private List <GamePlayer> gamePlayers;
+    private Set<GamePlayer> gamePlayers;
 
     @OneToMany(mappedBy="player", fetch=FetchType.EAGER)
     private List <Score> scores;
@@ -116,5 +117,9 @@ public class Player {
         return this.scores.stream()
                 .map(Score::getScore)
                 .count();
+    }
+    public boolean hasGamePlayer(Long gamePlayerId){
+        return this.gamePlayers.stream()
+                .anyMatch(gp -> gp.getId() == gamePlayerId );
     }
 }

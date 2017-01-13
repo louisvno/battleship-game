@@ -21,7 +21,7 @@ function addTableRow(rowHeader,columnHeaders){
 
     for(i=1; i < columnHeaders.length; i++){
       var td = addTableDataElement();
-      td.classList.add(rowHeader + columnHeaders[i]);
+      td.setAttribute("data-coordinate",rowHeader + columnHeaders[i]);
       tr.appendChild(td);
     }
     return tr;

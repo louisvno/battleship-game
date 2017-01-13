@@ -42,11 +42,13 @@ function loadGames(){
 
 function renderGamesList(data){
     $('#games-list').html(addGames(data));
+    setButtonEvents();
 }
 
 function addGames(data){
-   return data.games.reduce(function(str,game){
-      return  str +
+   str="";
+   data.games.forEach(function(game){
+        str +=
               "<div class='game-card'>" +
                    "<ul>"+
                       "<li>"+ game.id + "</li>" +
@@ -55,8 +57,9 @@ function addGames(data){
                    "</ul>" +
                    addJoinButton(game) +
                    addContinueGameButton(game,data.currentPlayer) +
-              "<div>";
-    },"");
+              "</div>";
+    });
+    return str;
 }
 
 function addContinueGameButton(game,currentPlayer){
@@ -75,7 +78,7 @@ function addContinueGameButton(game,currentPlayer){
 function addJoinButton(game){
      var ids = Object.keys(game.gamePlayers);
      if (ids.length < 2 ){
-         return "<button class='join-button'>Join Game</button>";
+         return "<button data-gameid=" + game.id +" class='join-button'>Join Game</button>";
      } else
      return "";
  }
@@ -108,7 +111,6 @@ function login (username, password){
     $.ajax({ method:"POST",
            url: "/api/login",
                   data: {username: username,  password: password },
-                  dataType: "json",
                   statusCode: {200: function() {
                                   location.reload();
                                   }
@@ -158,4 +160,18 @@ $("#new-game").click( function(e) {
         }
     });
 });
+
+function setButtonEvents(){
+    $("button.join-button").on("click", function(e) {
+        e.preventDefault();
+        var gameId = e.target.getAttribute("data-gameId");
+        $.ajax({
+            method:"POST",
+            url: "/api/game/" + gameId + "/players",
+            dataType: "json",
+            statusCode: {201: function(response) {window.location="/game.html?gp="+ response.id;}
+            }
+        });
+    });
+}
 
