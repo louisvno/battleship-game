@@ -1,6 +1,6 @@
-/**************
-*   Global Variables
-**************/
+/**********************************
+*   Ship placement UI functions   *
+**********************************/
 var shipsAvailable = [{
                      shipType : "Aircraft-carrier",
                      shipLocations : [],
@@ -53,7 +53,7 @@ function clearTempLocations () {
    tempLocations=[];
 }
 
-//Ship placement UI functions
+
 function setShipPlacementEvents(){
 
     $('#fleet-display').on('mouseover',"td", function (e){
@@ -63,7 +63,12 @@ function setShipPlacementEvents(){
        var firstCoordinate = e.target.getAttribute("data-coordinate");
 
        if (shipsAvailable.length !== 0) {
-           tempLocations = getShipLocationsHorizontal(firstCoordinate,shipsAvailable[0].shipLength);
+           if (placeHorizontal()){
+                tempLocations = getShipLocationsHorizontal(firstCoordinate,shipsAvailable[0].shipLength);
+           } else {
+                tempLocations = getShipLocationsVertical(firstCoordinate,shipsAvailable[0].shipLength);
+           }
+
            tempLocations.forEach(function(loc){
               $('#fleet-display td[data-coordinate=' + loc + "]").addClass("temp-ship");
            })
@@ -88,20 +93,38 @@ function isValidPlacement(){
     tempLocations.forEach(function(loc){
         checks.push($('#fleet-display td[data-coordinate=' + loc + "]").hasClass("ship"));
     });
-    console.log(checks.every(function (check){return check === false}))
     return checks.every(function (check){return check === false});
 }
 
+function placeHorizontal(){
+    return ($('input[type=radio]:checked').val()) === "horizontal";
+}
+
 function getShipLocationsHorizontal(firstCoordinate,shipLength){
-    var xCoordinate = Number(firstCoordinate.split("").pop());
-    var yCoordinate = firstCoordinate.split("").shift();
+    var x = Number(firstCoordinate.split("").pop());
+    var y = firstCoordinate.split("").shift();
     var shipLocations =[];
 
     for (var i=0; i < shipLength; i++){
-        shipLocations.push(yCoordinate + (xCoordinate + i));
+        shipLocations.push(y + (x + i));
     }
     return shipLocations;
 }
+
+function getShipLocationsVertical(firstCoordinate,shipLength){
+    var yCoordinates = [ "A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
+    var x = Number(firstCoordinate.split("").pop());
+    var y = firstCoordinate.split("").shift();
+    var shipLocations =[];
+    var yIndex = yCoordinates.indexOf(y);
+
+    for (var i=0; i < shipLength; i++){
+        shipLocations.push((yCoordinates[yIndex +i]) + x);
+    }
+    return shipLocations;
+}
+
+/* end ship placement UI functions */
 
 //UI controller
 loadGameData(getParameterByName("gp"));
