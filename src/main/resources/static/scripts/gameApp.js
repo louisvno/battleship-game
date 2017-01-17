@@ -1,5 +1,5 @@
 /**********************************
-*   Ship placement UI functions   *
+*   Ship placement functions   *
 **********************************/
 var shipsAvailable = [{
                      shipType : "Aircraft-carrier",
@@ -42,7 +42,7 @@ var shipsAvailable = [{
                      shipLocations : [],
                      shipLength : 2
                      }];
-var playerShips = [];
+var placedShips = [];
 var tempLocations=[];
 
 
@@ -53,6 +53,15 @@ function clearTempLocations () {
    tempLocations=[];
 }
 
+function updatePlacedView(){
+   var allLocs = placedShips.map(function (s){return s.shipLocations})
+                    .reduce(function(a, b) {return a.concat(b)},[])
+    console.log(allLocs);
+    $('#fleet-display td').removeClass("ship");
+    allLocs.forEach(function(loc){
+                    $('#fleet-display td[data-coordinate=' + loc + "]").addClass("ship");
+                })
+}
 
 function setShipPlacementEvents(){
 
@@ -68,7 +77,6 @@ function setShipPlacementEvents(){
            } else {
                 tempLocations = getShipLocationsVertical(firstCoordinate,shipsAvailable[0].shipLength);
            }
-
            tempLocations.forEach(function(loc){
               $('#fleet-display td[data-coordinate=' + loc + "]").addClass("temp-ship");
            })
@@ -76,24 +84,59 @@ function setShipPlacementEvents(){
     });
 
     $('#fleet-display').on('click',"td", function (e){
-        if(isValidPlacement() && shipsAvailable.length !== 0){
+        if(shipsAvailable.length !== 0 && isValidPlacement()){
             shipsAvailable[0].shipLocations = tempLocations;
-            tempLocations.forEach(function(loc){
-                $('#fleet-display td[data-coordinate=' + loc + "]").addClass("ship");
-            })
-            playerShips.push(shipsAvailable.shift());
-          //  console.log(playerShips);
+            placedShips.push(shipsAvailable.shift());
             clearTempLocations();
+            updatePlacedView();
         }
+    });
+
+    $('#undo-placement').click(function(){
+        if (placedShips.length !== 0){
+            shipsAvailable.unshift(placedShips.pop());
+            updatePlacedView();
+        }
+
+    });
+
+    $('#submit-ships').click( function(){
+       if (shipsAvailable.length === 0 && placedShips.length === 10){
+            createShips(getParameterByName("gp"));
+       };
     });
 };
 
 function isValidPlacement(){
+    return isNotOverlapping() && isInsideField();
+}
+
+function isNotOverlapping (){
     var checks=[];
     tempLocations.forEach(function(loc){
         checks.push($('#fleet-display td[data-coordinate=' + loc + "]").hasClass("ship"));
-    });
-    return checks.every(function (check){return check === false});
+        });
+    return checks.every(function (check){return check === false})
+}
+
+
+function isInsideField() {
+    var firstCoordinate = tempLocations[0];
+    var regex = /(\d+)/; //find digit once or more
+    var x = Number(regex.exec(firstCoordinate)[0]);
+    var y = firstCoordinate.split("").shift();
+    var fieldSize = 10;
+
+    if(placeHorizontal()){
+        var limitCoordinate = fieldSize - (shipsAvailable[0].shipLength-1);
+        return  x <= limitCoordinate;
+    } else {
+        var yCoordinates = [ "A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
+        var yNum = yCoordinates.indexOf(y)+1;
+        console.log(yNum);
+        var limitCoordinate = fieldSize - (shipsAvailable[0].shipLength-1);
+        return  yNum <= limitCoordinate;
+    }
 }
 
 function placeHorizontal(){
@@ -101,19 +144,22 @@ function placeHorizontal(){
 }
 
 function getShipLocationsHorizontal(firstCoordinate,shipLength){
-    var x = Number(firstCoordinate.split("").pop());
+    var regex = /(\d+)/; //find digit once or more
+    var x = Number(regex.exec(firstCoordinate)[0]);
     var y = firstCoordinate.split("").shift();
     var shipLocations =[];
 
     for (var i=0; i < shipLength; i++){
         shipLocations.push(y + (x + i));
     }
+    console.log(shipLocations);
     return shipLocations;
 }
 
 function getShipLocationsVertical(firstCoordinate,shipLength){
     var yCoordinates = [ "A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
-    var x = Number(firstCoordinate.split("").pop());
+    var regex = /(\d+)/; //find digit once or more
+    var x = Number(regex.exec(firstCoordinate)[0]);
     var y = firstCoordinate.split("").shift();
     var shipLocations =[];
     var yIndex = yCoordinates.indexOf(y);
@@ -123,11 +169,6 @@ function getShipLocationsVertical(firstCoordinate,shipLength){
     }
     return shipLocations;
 }
-
-/* end ship placement UI functions */
-
-//UI controller
-loadGameData(getParameterByName("gp"));
 
 //get url game number parameter (from stack overflow)
 function getParameterByName(name, url) {
@@ -142,43 +183,50 @@ function getParameterByName(name, url) {
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
-function setShip (){
-    playerShips.push();
-    shipsAvailable.shift();
+
+/***********************************
+*  Main Game Functions
+************************************/
+
+//UI controller
+$(function (){
+   loadGameData(getParameterByName("gp"));
+})
+
+function viewController(gameData, gamePlayerId){
+    var gamePlayers = gameData.gamePlayers,
+
+    salvoes = gameData.salvoes,
+    player = gamePlayers[gamePlayerId],
+    playerSalvoes = salvoes[gamePlayerId],
+    playerFleet = gameData.fleet,
+    enemyId = getEnemyId(gamePlayers,gamePlayerId),
+    enemy = gamePlayers[enemyId],
+    enemySalvoes = gameData.salvoes[enemyId];
+
+    renderGameView (playerFleet, player,playerSalvoes, enemy,enemySalvoes, playerFleet)
+
+    //if player has no ships go into "ship placement mode"
+    if (playerFleet.length === 0 ){
+        setShipPlacementEvents();
+        //TODO show and hide appropriate view elements
+    }
 }
 
 function createShips (gamePlayerId) {
-    $.ajax({ method:"POST",
-             url: "/api/games/players/" + gamePlayerId + "/ships",
-             contentType:"application/json",
-             data: JSON.stringify ([{
-                            "shipType" : "destroyer",
-                            "shipLocations" : ["A1","A2"]
-                            },
-                            {
-                            "shipType" : "boat",
-                            "shipLocations" : ["B1","B2"]
-                            }]),
-             success: function(){location.reload()}
-    });
+        $.ajax({ method:"POST",
+                 url: "/api/games/players/" + gamePlayerId + "/ships",
+                 contentType:"application/json",
+                 data: JSON.stringify (placedShips),
+                 success: function(){location.reload()}
+        });
 }
 
 function loadGameData(gamePlayerId){
       $.ajax({ url:"/api/game_view/" + gamePlayerId,
                method:"GET",
                success: function(response){
-             //map data from JSON so that might the data structure change only has to be changed here
-                     var gamePlayers = response.gamePlayers,
-
-                     salvoes = response.salvoes,
-                     player = gamePlayers[gamePlayerId],
-                     playerSalvoes = salvoes[gamePlayerId],
-                     playerFleet = response.fleet,
-                     enemyId = getEnemyId(gamePlayers,gamePlayerId),
-                     enemy = gamePlayers[enemyId],
-                     enemySalvoes = response.salvoes[enemyId];
-
-                     renderGameView (playerFleet, player,playerSalvoes, enemy,enemySalvoes, playerFleet)
+                     viewController(response, gamePlayerId);
               },
               statusCode: {403: function(){window.location = "/games.html";}
               }
@@ -194,7 +242,6 @@ function renderGameView (playerFleet, player,playerSalvoes, enemy,enemySalvoes, 
      showHitsReceived(enemySalvoes);
      showHits(playerSalvoes);
      showMissed(playerSalvoes);
-     setShipPlacementEvents();
 }
 
 function renderShipList(shipsAvailable) {
@@ -217,7 +264,9 @@ function showPlayerFleet(fleet) {
 
 function showGamePlayerNames(player, enemy){
       $('#player-name').text(player.player.firstName);
-      $('#enemy-name').text(enemy.player.firstName);
+      if(enemy){
+        $('#enemy-name').text(enemy.player.firstName);
+      }
 }
 
 //gamePlayers; keys are id's
@@ -228,11 +277,13 @@ function getEnemyId(gamePlayers, gamePlayerId) {
 
 //enemysalvoes; keys are turns
 function showHitsReceived(enemySalvoes){
-    Object.keys(enemySalvoes).forEach(turn => {
-        enemySalvoes[turn].hits.forEach(hit => {
-            $('#fleet-display .' + hit).addClass("hit").text(turn);
+    if(enemySalvoes){
+        Object.keys(enemySalvoes).forEach(turn => {
+            enemySalvoes[turn].hits.forEach(hit => {
+                $('#fleet-display .' + hit).addClass("hit").text(turn);
+            });
         });
-    });
+    }
 };
 
 //playerSalvoes; keys are turns
@@ -252,3 +303,5 @@ function showMissed(playerSalvoes){
         });
     });
 };
+
+
