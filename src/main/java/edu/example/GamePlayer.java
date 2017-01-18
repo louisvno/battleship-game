@@ -78,6 +78,21 @@ public class GamePlayer {
         return salvoes;
     }
 
+    public boolean hasPlayedTurn (int turn) {
+        return this.getSalvoes().stream()
+                                .map(s -> s.getTurn())
+                                .anyMatch(t -> t == turn);
+    }
+
+    public Integer getLastTurn () {
+        if (!this.getSalvoes().isEmpty()) {
+            return this.getSalvoes().stream()
+                    .map(s -> s.getTurn())
+                    .max(Integer::compare)
+                    .get();
+        } else return 0;
+    }
+
 //    public void fireSalvo(Salvo salvo){
 //        salvo.setGamePlayer(this);//assign gameplayer to salvo
 //        this.salvoes.add(salvo);//add salvo to gameplayer salvoes

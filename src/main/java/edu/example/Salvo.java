@@ -24,12 +24,15 @@ public class Salvo {
 
     public Salvo(){
     }
+    public Salvo(List<String> targets){
+        this.targets = new ArrayList<>();
+        this.targets.addAll(targets);
+    }
 
     public Salvo(List<String> targets, GamePlayer gamePlayer, int turn){
         this.targets = new ArrayList<>();
         this.targets.addAll(targets);
-        this.turn = turn;
-        this.gamePlayer = gamePlayer;
+        //this.gamePlayer = gamePlayer;
     }
 
     public long getId() {
@@ -62,6 +65,5 @@ public class Salvo {
 
     public void setGamePlayer(GamePlayer gamePlayer) {
         this.gamePlayer = gamePlayer;
-        this.turn++;
     }
 }

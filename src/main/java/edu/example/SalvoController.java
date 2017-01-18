@@ -34,6 +34,8 @@ public class SalvoController {
     private PlayerRepository players;
     @Autowired
     private ShipRepository shipsRepo;
+    @Autowired
+    private SalvoRepository salvoesRepo;
 
     @RequestMapping(value= "/games", method=RequestMethod.GET)
     private Map<String, Object> mapAllGames(Authentication auth) {
@@ -78,6 +80,27 @@ public class SalvoController {
 
                 ships.forEach(ship -> ship.setGamePlayer(gamePlayer));
                 ships.forEach(ship -> shipsRepo.save(ship));
+
+                return new ResponseEntity(CREATED);
+            }else
+                return new ResponseEntity(FORBIDDEN);
+        }else
+            return new ResponseEntity(UNAUTHORIZED);
+    }
+
+    @RequestMapping(value = "/games/players/{gamePlayerId}/salvoes", method=RequestMethod.POST)
+    private ResponseEntity <HttpStatus> fireSalvo(@RequestBody Salvo salvo,
+                                                @PathVariable Long gamePlayerId,
+                                                Authentication auth){
+
+        Player player = getCurrentPlayer(auth);
+        GamePlayer gamePlayer = gamePlayers.findOne(gamePlayerId);
+
+        if (!isGuest(auth) && player.hasGamePlayer(gamePlayerId)){
+            if (true) {
+                salvo.setTurn(gamePlayer.getLastTurn() + 1);
+                salvo.setGamePlayer(gamePlayer);
+                salvoesRepo.save(salvo);
 
                 return new ResponseEntity(CREATED);
             }else

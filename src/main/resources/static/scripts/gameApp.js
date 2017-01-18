@@ -210,8 +210,29 @@ function viewController(gameData, gamePlayerId){
     if (playerFleet.length === 0 ){
         setShipPlacementEvents();
         //TODO show and hide appropriate view elements
+    } else {
+        setGamePlayEvents(gamePlayerId);
     }
 }
+
+var salvoLocations=[];
+
+function setGamePlayEvents (gamePlayerId){
+    $('#battlefield-display').on('click',"td", function (e){
+            var coordinate = e.target.getAttribute("data-coordinate");
+
+            if (salvoLocations.length < 5) {salvoLocations.push(coordinate)}
+            console.log(salvoLocations);
+//            $.ajax({ method:"POST",
+//                     url: "/games/players/" + gamePlayerId + "/salvoes",
+//                     contentType:"application/json",
+//                     data: JSON.stringify (),
+//                     success: function(){location.reload()}
+//            });
+    });
+}
+
+
 
 function createShips (gamePlayerId) {
         $.ajax({ method:"POST",
