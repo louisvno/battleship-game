@@ -1,5 +1,5 @@
 /**********************************
-*   Ship placement functions   *
+*   Globals                       *
 **********************************/
 var shipsAvailable = [{
                      shipType : "Aircraft-carrier",
@@ -44,7 +44,11 @@ var shipsAvailable = [{
                      }];
 var placedShips = [];
 var tempLocations=[];
+var salvoTargets=[];
 
+/**********************************
+*   Ship placement functions   *
+**********************************/
 
 function clearTempLocations () {
    tempLocations.forEach(function(loc){
@@ -215,24 +219,29 @@ function viewController(gameData, gamePlayerId){
     }
 }
 
-var salvoLocations=[];
-
 function setGamePlayEvents (gamePlayerId){
     $('#battlefield-display').on('click',"td", function (e){
             var coordinate = e.target.getAttribute("data-coordinate");
+            var index = salvoTargets.indexOf(coordinate);
 
-            if (salvoLocations.length < 5) {salvoLocations.push(coordinate)}
-            console.log(salvoLocations);
-//            $.ajax({ method:"POST",
-//                     url: "/games/players/" + gamePlayerId + "/salvoes",
-//                     contentType:"application/json",
-//                     data: JSON.stringify (),
-//                     success: function(){location.reload()}
-//            });
+            if (salvoTargets.length < 5 && index < 0 && e.target.classList.length ===0) {
+                salvoTargets.push(coordinate);
+                $(e.target).addClass("targeted");
+            } else if (salvoTargets.length <= 5 && index >= 0)  {
+                salvoTargets.splice(index,1);
+                $(e.target).removeClass("targeted");
+            }
+    });
+
+    $('#fire-salvo').click( function (){
+        $.ajax({ method:"POST",
+                 url: "api/games/players/" + gamePlayerId + "/salvoes",
+                 contentType:"application/json",
+                 data: JSON.stringify ({"targets" : salvoTargets}),
+                 success: function(){location.reload()}
+        });
     });
 }
-
-
 
 function createShips (gamePlayerId) {
         $.ajax({ method:"POST",
@@ -301,7 +310,7 @@ function showHitsReceived(enemySalvoes){
     if(enemySalvoes){
         Object.keys(enemySalvoes).forEach(turn => {
             enemySalvoes[turn].hits.forEach(hit => {
-                $('#fleet-display .' + hit).addClass("hit").text(turn);
+                $('#fleet-display td[data-coordinate=' + hit).addClass("hit").text(turn);
             });
         });
     }
@@ -311,7 +320,7 @@ function showHitsReceived(enemySalvoes){
 function showHits(playerSalvoes){
     Object.keys(playerSalvoes).forEach(turn => {
         playerSalvoes[turn].hits.forEach(hit => {
-            $('#battlefield-display .' + hit).addClass("ship hit").text(turn);
+            $('#battlefield-display td[data-coordinate=' + hit).addClass("ship hit").text(turn);
         });
     });
 };
@@ -320,9 +329,11 @@ function showHits(playerSalvoes){
 function showMissed(playerSalvoes){
     Object.keys(playerSalvoes).forEach(turn => {
         playerSalvoes[turn].missed.forEach(miss => {
-            $('#battlefield-display .' + miss).addClass("missed").text(turn);
+            $('#battlefield-display td[data-coordinate=' + miss).addClass("missed").text(turn);
         });
     });
 };
+
+
 
 

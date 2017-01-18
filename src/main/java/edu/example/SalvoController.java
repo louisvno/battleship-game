@@ -101,6 +101,8 @@ public class SalvoController {
                 salvo.setTurn(gamePlayer.getLastTurn() + 1);
                 salvo.setGamePlayer(gamePlayer);
                 salvoesRepo.save(salvo);
+                gamePlayer.fireSalvo(salvo);
+                setShipSunk(gamePlayer);
 
                 return new ResponseEntity(CREATED);
             }else
@@ -210,6 +212,7 @@ public class SalvoController {
         dto.put("created", game.getCreationDate());
         dto.put("gamePlayers", mapGamePlayersFromGame(game));
         dto.put("fleet", mapFleetFromGamePlayer(gamePlayer));
+        dto.put("enemyFleet", mapEnemyFleet(getEnemy(gamePlayer)));
         dto.put("salvoes", mapSalvoes(game.getGamePlayers()));
 
         return dto;
@@ -246,16 +249,27 @@ public class SalvoController {
     }
 
     private List<Object> mapFleetFromGamePlayer(GamePlayer gamePlayer){
-        return
-             gamePlayer.getFleet().stream()
+        List<Object> dto = new ArrayList<>();
+        dto = gamePlayer.getFleet().stream()
                 .map(ship -> makeShipDataDTO(ship))
                 .collect(toList());
+        return dto;
+    }
+
+    private List<Object> mapEnemyFleet(GamePlayer gamePlayer){
+        List<Object> dto = new ArrayList<>();
+           dto =  gamePlayer.getFleet().stream()
+                     .filter(ship -> ship.isSunk() == true)
+                    .map(ship -> makeShipDataDTO(ship))
+                    .collect(toList());
+        return dto;
     }
 
     private Map<String, Object> makeShipDataDTO(Ship ship){
         Map<String, Object> dto = new LinkedHashMap<>();
         dto.put("locations", ship.getShipLocations());
-        dto.put("types", ship.getShipType());
+        dto.put("type", ship.getShipType());
+        dto.put("isSunk", ship.isSunk());
 
         return dto;
     }
@@ -357,5 +371,28 @@ public class SalvoController {
         return auth == null || auth instanceof AnonymousAuthenticationToken;
     }
 
+    private void setShipSunk(GamePlayer gamePlayer){
+        GamePlayer enemy = getEnemy(gamePlayer);
+        List<Salvo> salvoes = gamePlayer.getSalvoes();
+        Set<Ship> enemyShips = enemy.getFleet();
 
+        List<String> allTargets = salvoes.stream()
+                                            .map(salvo-> salvo.getTargets())
+                                            .flatMap(List::stream)
+                                            .collect(toList());
+
+        enemyShips.stream()
+                .filter(ship -> !ship.isSunk())
+                .forEach(ship -> {
+                                if(isSunk(ship,allTargets)){
+                                    ship.setSunk(true);
+                                    shipsRepo.save(ship);
+            }
+        });
+    }
+
+    private boolean isSunk(Ship ship,List <String> targets) {
+       return ship.getShipLocations().stream()
+                .allMatch(loc -> targets.contains(loc));
+    }
 }

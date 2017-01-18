@@ -23,6 +23,7 @@ public class Ship {
     @Column(name="ship_locations")
     private List<String> shipLocations = new ArrayList<>();
 
+    private boolean sunk = false;
     //constructors
     public Ship (){
 
@@ -36,6 +37,10 @@ public class Ship {
     //methods
     public long getId() {
         return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getShipType() {
@@ -62,4 +67,11 @@ public class Ship {
         this.shipLocations = shipLocations;
     }
 
+    public boolean isSunk() {
+        return sunk;
+    }
+
+    public void setSunk(boolean sunk) {
+        this.sunk = sunk;
+    }
 }

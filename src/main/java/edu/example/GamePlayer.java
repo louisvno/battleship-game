@@ -27,7 +27,7 @@ public class GamePlayer {
     private Set<Ship> fleet = new HashSet<>();
 
     @OneToMany(mappedBy="gamePlayer",fetch = FetchType.EAGER)
-    private List <Salvo> salvoes = new LinkedList<>();;
+    private List <Salvo> salvoes = new ArrayList<>();
 
     private Date joinDate = new Date();
     public GamePlayer () {}
@@ -93,10 +93,10 @@ public class GamePlayer {
         } else return 0;
     }
 
-//    public void fireSalvo(Salvo salvo){
-//        salvo.setGamePlayer(this);//assign gameplayer to salvo
-//        this.salvoes.add(salvo);//add salvo to gameplayer salvoes
-//    }
+    public void fireSalvo(Salvo salvo){
+        salvo.setGamePlayer(this);//assign gameplayer to salvo
+        this.salvoes.add(salvo);//add salvo to gameplayer salvoes
+    }
 
     //TODO ask Ferran for alternative method to connect gameplayer and fleet
     //Alternative: let database arrange relation between ship and GP,
