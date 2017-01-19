@@ -214,9 +214,11 @@ function viewController(gameData, gamePlayerId){
     if (playerFleet.length === 0 ){
         setShipPlacementEvents();
         //TODO show and hide appropriate view elements
-    } else {
+    } else { //if action mode
         setGamePlayEvents(gamePlayerId);
     }
+    //if wait mode 
+
 }
 
 function setGamePlayEvents (gamePlayerId){

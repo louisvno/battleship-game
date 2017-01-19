@@ -25,7 +25,7 @@ public class Game {
     private Set<GamePlayer> gamePlayers = new HashSet<>();
 
     @OneToMany(mappedBy="game", fetch=FetchType.EAGER)
-    private List <Score> scores;
+    private Set <Score> scores = new HashSet<>();
 
     public Game () {
     }
@@ -63,5 +63,9 @@ public class Game {
     public boolean hasPlayer (Player player){
         return this.getGamePlayers().stream()
                 .anyMatch(gp -> gp.getPlayer() == player);
+    }
+
+    public Set<Score> getScores() {
+        return scores;
     }
 }

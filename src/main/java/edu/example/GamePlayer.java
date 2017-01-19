@@ -3,6 +3,8 @@ package edu.example;
 import javax.persistence.*;
 import java.util.*;
 
+import static java.util.stream.Collectors.toList;
+
 /**
  * Created by louis on 12/13/2016.
  */
@@ -94,11 +96,12 @@ public class GamePlayer {
     }
 
     public void fireSalvo(Salvo salvo){
-        salvo.setGamePlayer(this);//assign gameplayer to salvo
+        //salvo.setGamePlayer(this);//assign gameplayer to salvo
         this.salvoes.add(salvo);//add salvo to gameplayer salvoes
     }
 
-    //TODO ask Ferran for alternative method to connect gameplayer and fleet
+
+//TODO ask Ferran for alternative method to connect gameplayer and fleet
     //Alternative: let database arrange relation between ship and GP,
     // add Gameplayer to ship when creating a new ship
 //    public void addShip(Ship ship) {
