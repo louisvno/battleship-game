@@ -109,6 +109,8 @@ function setShipPlacementEvents(){
             createShips(getParameterByName("gp"));
        };
     });
+
+
 };
 
 function isValidPlacement(){
@@ -192,33 +194,89 @@ function getParameterByName(name, url) {
 *  Main Game Functions
 ************************************/
 
-//UI controller
 $(function (){
    loadGameData(getParameterByName("gp"));
 })
 
+function loadGameData(gamePlayerId){
+      $.ajax({ url:"/api/game_view/" + gamePlayerId,
+               method:"GET",
+               success: function(response){
+                     viewController(response, gamePlayerId);
+              },
+              statusCode: {403: function(){window.location = "/games.html";}
+              }
+          });
+}
+
 function viewController(gameData, gamePlayerId){
+    //destructure data
     var gamePlayers = gameData.gamePlayers,
+        salvoes = gameData.salvoes || {},
+        player = gamePlayers[gamePlayerId],
+        playerSalvoes = salvoes[gamePlayerId],
+        playerFleet = gameData.fleet,
+        enemyId = getEnemyId(gamePlayers,gamePlayerId) || {},
+        enemy = gamePlayers[enemyId] || {},
+        enemySalvoes = gameData.salvoes[enemyId] || {},
+        enemyFleet = gameData.enemyFleet || {},
+        gameState = gameData.gameState;
 
-    salvoes = gameData.salvoes,
-    player = gamePlayers[gamePlayerId],
-    playerSalvoes = salvoes[gamePlayerId],
-    playerFleet = gameData.fleet,
-    enemyId = getEnemyId(gamePlayers,gamePlayerId),
-    enemy = gamePlayers[enemyId],
-    enemySalvoes = gameData.salvoes[enemyId];
-
-    renderGameView (playerFleet, player,playerSalvoes, enemy,enemySalvoes, playerFleet)
-
-    //if player has no ships go into "ship placement mode"
+    renderMainView (player, enemy);
+    //Render different states
+    //If player has no ships go into "ship placement mode"
     if (playerFleet.length === 0 ){
-        setShipPlacementEvents();
-        //TODO show and hide appropriate view elements
-    } else { //if action mode
-        setGamePlayEvents(gamePlayerId);
-    }
-    //if wait mode 
 
+        $("#ship-list").html(renderShipList(shipsAvailable));
+        $('#battlefield-display').addClass("off");
+        $("#fire-salvo").addClass("disabled");
+        $("#game-notifications h2").text("Deploy your fleet and press Ready!");
+        $("#ship-list").append('<form id ="switch-orientation" action="">' +
+                                                   '<h2>Switch ship orientation</h2>'+
+                                                   '<label><input type="radio" name="orientation" value="horizontal" checked="checked"> Horizontal</label>'+
+                                                   '<label><input type="radio" name="orientation" value="vertical"> Vertical</label>' +
+                                               '</form>');
+        setShipPlacementEvents();
+        $("#right-side-display .orange-display").html('<span>Scanning for enemy ships <span class="dot"></span></span>');
+        setWaitingDashAnimation();
+        setWaitingDotsAnimation();
+
+    //If player has ships go into "gameplay mode"
+    } else if (playerFleet.length > 0){
+        $("#submit-ships").hide();
+        $("#undo-placement").hide();
+        showPlayerFleet(playerFleet);
+        showHitsReceived(enemySalvoes);
+        showHits(playerSalvoes);
+        showMissed(playerSalvoes);
+        $("#ship-list").html(renderShipStatusList(playerFleet));
+
+        switch (gameState){
+                 case 0:
+                     //game ready to shoot salvoes
+                     $("#game-notifications h2").text("Ready to fire salvo!");
+                     $("#fire-salvo").addClass("active");
+                     $("#enemy-ship-list").html(renderShipStatusList(enemyFleet))
+                     setGamePlayEvents(gamePlayerId);
+                     break;
+                 case 1:
+                     //waiting for other player
+                     checkForUpdates();
+                     if(Object.keys(gamePlayers).length > 1 && !isEmpty(enemyFleet)){
+                        $("#enemy-ship-list").html(renderShipStatusList(enemyFleet))
+                        $("#game-notifications h2").text("Awaiting opponent turn");
+                     }else {
+                        $("#game-notifications h2").text("Waiting for other player");
+                        $("#right-side-display .orange-display").html('<span>Scanning for enemy ships <span class="dot"></span></span>')
+                        setWaitingDotsAnimation();
+                     }
+                     break;
+                 case 2:
+                     //game finished
+                     $("#game-notifications h2").text("Game Finished");
+                     break;
+        }
+    }
 }
 
 function setGamePlayEvents (gamePlayerId){
@@ -254,36 +312,48 @@ function createShips (gamePlayerId) {
         });
 }
 
-function loadGameData(gamePlayerId){
-      $.ajax({ url:"/api/game_view/" + gamePlayerId,
-               method:"GET",
-               success: function(response){
-                     viewController(response, gamePlayerId);
-              },
-              statusCode: {403: function(){window.location = "/games.html";}
-              }
-          });
- }
+function checkForUpdates(){
+    gamePlayerId = getParameterByName("gp");
+    setInterval( function (){
+        $.ajax({ url:"/api/game_view/" + gamePlayerId,
+                method:"GET",
+                success: function(response){
+                    if(response.gameState !== 1){
+                        window.location.reload();
+                    }
+                }
+        });
+   },1000);
+}
 
-function renderGameView (playerFleet, player,playerSalvoes, enemy,enemySalvoes, playerFleet){
+function renderMainView (player, enemy){
      createGameDisplay ("fleet-display");
      createGameDisplay ("battlefield-display");
-     renderShipList(shipsAvailable);
-     showPlayerFleet(playerFleet);
      showGamePlayerNames (player, enemy);
-     showHitsReceived(enemySalvoes);
-     showHits(playerSalvoes);
-     showMissed(playerSalvoes);
 }
 
 function renderShipList(shipsAvailable) {
     str="";
-   shipsAvailable.forEach(function(ship){
+    shipsAvailable.forEach(function(ship){
         str += "<li>" + ship.shipType + "</li>";
     });
-
-    $("#ship-list").html(str);
+    return str;
 }
+
+function renderShipStatusList(playerFleet) {
+    str="";
+    Object.keys(playerFleet).forEach(function(key){
+         var ship = playerFleet[key];
+         var status;
+         if (ship.isSunk == false){
+             status = "ok";
+         } else {
+             status ="sunk";
+         }
+         str += "<li class=" + status + ">" + ship.type + ": " + status + "</li>";
+     });
+    return str;
+ }
 
 function showPlayerFleet(fleet) {
     fleet.forEach( function(ship){
@@ -296,7 +366,7 @@ function showPlayerFleet(fleet) {
 
 function showGamePlayerNames(player, enemy){
       $('#player-name').text(player.player.firstName);
-      if(enemy){
+      if(!isEmpty(enemy)){
         $('#enemy-name').text(enemy.player.firstName);
       }
 }
@@ -309,7 +379,7 @@ function getEnemyId(gamePlayers, gamePlayerId) {
 
 //enemysalvoes; keys are turns
 function showHitsReceived(enemySalvoes){
-    if(enemySalvoes){
+    if(!isEmpty(enemySalvoes)){
         Object.keys(enemySalvoes).forEach(turn => {
             enemySalvoes[turn].hits.forEach(hit => {
                 $('#fleet-display td[data-coordinate=' + hit).addClass("hit").text(turn);
@@ -320,22 +390,54 @@ function showHitsReceived(enemySalvoes){
 
 //playerSalvoes; keys are turns
 function showHits(playerSalvoes){
-    Object.keys(playerSalvoes).forEach(turn => {
-        playerSalvoes[turn].hits.forEach(hit => {
-            $('#battlefield-display td[data-coordinate=' + hit).addClass("ship hit").text(turn);
+    if (!isEmpty(playerSalvoes).length > 0){
+        Object.keys(playerSalvoes).forEach(turn => {
+            playerSalvoes[turn].hits.forEach(hit => {
+                $('#battlefield-display td[data-coordinate=' + hit).addClass("ship hit").text(turn);
+            });
         });
-    });
+    }
 };
 
 //playerSalvoes; keys are turns
 function showMissed(playerSalvoes){
-    Object.keys(playerSalvoes).forEach(turn => {
-        playerSalvoes[turn].missed.forEach(miss => {
-            $('#battlefield-display td[data-coordinate=' + miss).addClass("missed").text(turn);
+    if (!isEmpty(playerSalvoes)){
+        Object.keys(playerSalvoes).forEach(turn => {
+            playerSalvoes[turn].missed.forEach(miss => {
+                $('#battlefield-display td[data-coordinate=' + miss).addClass("missed").text(turn);
+            });
         });
-    });
+    }
 };
 
+function setWaitingDotsAnimation (){
+    setInterval(function(){
+                cell = $(".dot");
+                if (cell.text().length > 3){
+                            cell.text('');
+                        }else{ cell.append('.')}
+            }, 500);
+}
+
+function setWaitingDashAnimation(){
+    setInterval(function(){
+                    cell = $("#battlefield-display tr:nth-of-type(2)  td:first-of-type");
+                    cell.css("color","#009900")
+                    if (cell.text() == "_"){
+                        cell.text('');
+                    }else{
+                        cell.text('_');
+                    }
+                }, 500);
+ }
+
+//Utility functions
+
+//Check if an object is empty or not
+function isEmpty(obj){
+    if (Object.keys(obj).length > 0) return false;
+    else return true;
+}
 
 
 

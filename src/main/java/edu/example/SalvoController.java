@@ -265,17 +265,26 @@ public class SalvoController {
     }
 
     private List<Object> mapEnemyFleet(GamePlayer gamePlayer){
-        List<Object> dto = new ArrayList<>();
-           dto =  gamePlayer.getFleet().stream()
-                     .filter(ship -> ship.isSunk() == true)
-                    .map(ship -> makeShipDataDTO(ship))
+        if (gamePlayer != null) {
+            List<Object> dto = new ArrayList<>();
+            dto = gamePlayer.getFleet().stream()
+                    .map(ship -> makeEnemyShipDataDTO(ship))
                     .collect(toList());
-        return dto;
+            return dto;
+        } else return null;
     }
 
     private Map<String, Object> makeShipDataDTO(Ship ship){
         Map<String, Object> dto = new LinkedHashMap<>();
         dto.put("locations", ship.getShipLocations());
+        dto.put("type", ship.getShipType());
+        dto.put("isSunk", ship.isSunk());
+
+        return dto;
+    }
+
+    private Map<String, Object> makeEnemyShipDataDTO(Ship ship){
+        Map<String, Object> dto = new LinkedHashMap<>();
         dto.put("type", ship.getShipType());
         dto.put("isSunk", ship.isSunk());
 
@@ -387,16 +396,19 @@ public class SalvoController {
 
     private void setShipSunk(GamePlayer gamePlayer){
         GamePlayer enemy = getEnemy(gamePlayer);
-        List<String> allTargets = getAllSalvoTargets(gamePlayer);
-        Set<Ship> enemyShips = enemy.getFleet();
+        if (enemy != null) {
+            List<String> allTargets = getAllSalvoTargets(gamePlayer);
+            Set<Ship> enemyShips = enemy.getFleet();
 
-        enemyShips.stream()
-                .filter(ship -> !ship.isSunk())
-                .forEach(ship -> {if(isSunk(ship,allTargets)){
-                                    ship.setSunk(true);
-                                    shipsRepo.save(ship);
-            }
-        });
+            enemyShips.stream()
+                    .filter(ship -> !ship.isSunk())
+                    .forEach(ship -> {
+                        if (isSunk(ship, allTargets)) {
+                            ship.setSunk(true);
+                            shipsRepo.save(ship);
+                        }
+                    });
+        }
     }
 
     private boolean isSunk(Ship ship,List <String> targets) {
@@ -406,23 +418,26 @@ public class SalvoController {
 
     //Gamestates 0= actions allowed 1= wait for other player 2=game over (no more salvoes allowed)
     private int getGameState(GamePlayer gamePlayer){
-        GamePlayer enemy = getEnemy(gamePlayer);
-        //if enemyships have not been placed yet > wait (cannot be calculated from JSON) 1
-        if (enemy.getFleet().isEmpty()) return 1;
-        //if player has destroyed all enemy ships game is over for this player
-        else if (hasWon(gamePlayer)) return 2;
-        //if enemy has destroyed all your ships but you still have one turn left
-        else if (hasWon(enemy) && enemy.getLastTurn() < gamePlayer.getLastTurn()) return 1;
-        //if enemy has destroyed all your ships and turns are equal you are also game over
-        else if (hasWon(enemy) && enemy.getLastTurn() == gamePlayer.getLastTurn()){
-            if (gamePlayer.getGame().getScores().isEmpty()) {
-                setScores(gamePlayer);
-                return 2;
-            }else return 2;
-        }
-        //if player has one turn more than enemy > wait 1
-        else if (enemy.getLastTurn() < gamePlayer.getLastTurn()) return 1;
 
+        GamePlayer enemy = getEnemy(gamePlayer);
+        if (enemy != null) {
+            //if enemyships have not been placed yet > wait (cannot be calculated from JSON) 1
+            if (enemy.getFleet().isEmpty()) return 1;
+                //if player has destroyed all enemy ships game is over for this player
+            else if (hasWon(gamePlayer)) return 2;
+                //if enemy has destroyed all your ships but you still have one turn left
+            else if (hasWon(enemy) && enemy.getLastTurn() < gamePlayer.getLastTurn()) return 1;
+                //if enemy has destroyed all your ships and turns are equal you are also game over
+            else if (hasWon(enemy) && enemy.getLastTurn() == gamePlayer.getLastTurn()) {
+                if (gamePlayer.getGame().getScores().isEmpty()) {
+                    setScores(gamePlayer);
+                    return 2;
+                } else return 2;
+            }
+            //if player has one turn more than enemy > wait 1
+            else if (enemy.getLastTurn() < gamePlayer.getLastTurn()) return 1;
+            else return 0;
+        }else if (enemy == null && gamePlayer.getFleet().isEmpty() == false) return 1;
         else return 0;
     }
 

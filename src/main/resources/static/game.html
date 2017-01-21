@@ -14,42 +14,51 @@
     <script src="scripts/createBattleFieldView.js"></script>
     <script src="scripts/gameApp.js"></script>
 </head>
+
 <body>
-    <div class="wrapper">
     <section id="game-info">
-        <span id="player-name"></span>
-        <span>VS.</span>
-        <span id="enemy-name"></span>
+        <div id="info">
+            <span id="player-name"></span>
+            <span>VS.</span>
+            <span id="enemy-name"></span>
+        </div>
+
+        <div id="game-notifications" class="orange-display">
+            <h2></h2>
+        </div>
     </section>
 
-    <aside id="available-ship-list">
-        <button id="undo-placement">Undo</button>
-        <ul id="ship-list">
+    <div class="flex-container">
+        <aside id="left-side-display">
+            <h2 class="display-header">Your fleet status</h2>
 
-        </ul>
+            <div class="orange-display">
+                <ul id="ship-list"></ul>
+            </div>
 
-        <form id ="switch-orientation" action="">
-            <h2>Switch ship orientation</h2>
-            <input type="radio" name="orientation" value="horizontal" checked="checked"> Horizontal
-            <input type="radio" name="orientation" value="vertical"> Vertical
-        </form>
-    </aside>
+            <button id="undo-placement" class="active">Undo Placement</button>
+        </aside>
 
-    <section id="fleet">
+        <section id="fleet">
+            <h2 class="display-header">Your fleet status</h2>
+            <table id="fleet-display"></table>
+            <button id="submit-ships" class="active">Ready!</button>
+        </section>
 
-        <h2>Deploy your fleet and press Ready!</h2>
-        <h2>Your fleet status</h2>
-        <table id="fleet-display"></table>
+        <section id="battlefield">
+            <h2 class="display-header">Battlefield</h2>
+            <table id="battlefield-display"></table>
+            <button id="fire-salvo">Fire!</button>
+        </section>
 
-        <button id="submit-ships">Ready!</button>
-    </section>
-
-    <section id="battlefield">
-        <h2>Battlefield</h2>
-        <table id="battlefield-display"></table>
-        <button id="fire-salvo">Fire!</button>
-    </section>
+        <aside id="right-side-display">
+            <h2 class="display-header">Enemy ships</h2>
+            <div class="orange-display">
+                <ul id="enemy-ship-list"></ul>
+            </div>
+        </aside>
     </div>
+
 </body>
 
 </html>
