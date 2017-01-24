@@ -421,22 +421,20 @@ public class SalvoController {
 
         GamePlayer enemy = getEnemy(gamePlayer);
         if (enemy != null) {
-            //if enemyships have not been placed yet > wait (cannot be calculated from JSON) 1
+            //if enemyships have not been placed yet > wait 1
             if (enemy.getFleet().isEmpty()) return 1;
-                //if player has destroyed all enemy ships game is over for this player
-            else if (hasWon(gamePlayer)) return 2;
-                //if enemy has destroyed all your ships but you still have one turn left
-            else if (hasWon(enemy) && enemy.getLastTurn() < gamePlayer.getLastTurn()) return 1;
+                //if enemy destroyed your ships you might have one turn left
+            else if (enemy.getLastTurn() < gamePlayer.getLastTurn()) return 1;
                 //if enemy has destroyed all your ships and turns are equal you are also game over
-            else if (hasWon(enemy) && enemy.getLastTurn() == gamePlayer.getLastTurn()) {
-                if (gamePlayer.getGame().getScores().isEmpty()) {
+            else if (hasWon(enemy) || hasWon(gamePlayer) &&
+                        enemy.getLastTurn() == gamePlayer.getLastTurn()) {
+                //only if scores have not been set before do
+                if(gamePlayer.getGame().getScores().isEmpty()){
                     setScores(gamePlayer);
                     return 2;
-                } else return 2;
-            }
-            //if player has one turn more than enemy > wait 1
-            else if (enemy.getLastTurn() < gamePlayer.getLastTurn()) return 1;
-            else return 0;
+                }else return 2;
+            }else return 0;
+
         }else if (enemy == null && gamePlayer.getFleet().isEmpty() == false) return 1;
         else return 0;
     }

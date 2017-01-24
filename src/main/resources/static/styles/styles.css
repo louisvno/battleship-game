@@ -142,9 +142,9 @@ td.targeted {
  color:rgb(191, 191, 191);
 }
 
-#ship-list li:first-of-type{
+/*#ship-list li:first-of-type{
     background-color:#805300;
-}
+}*/
 
 #game-notifications{
       text-align:center;
@@ -243,7 +243,7 @@ button.active:hover{
 }
 
 .orange-display li.sunk{
-  color: #805300;
+  color: #996300;
 }
 
 @media (max-width: 960px) {

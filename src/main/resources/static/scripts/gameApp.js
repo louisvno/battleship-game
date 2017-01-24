@@ -273,10 +273,23 @@ function viewController(gameData, gamePlayerId){
                      break;
                  case 2:
                      //game finished
-                     $("#game-notifications h2").text("Game Finished");
+                     $("#game-notifications h2").text("Game Finished: You " + hasWon(playerFleet,enemyFleet) + " !");
+                     $("#enemy-ship-list").html(renderShipStatusList(enemyFleet));
                      break;
         }
     }
+}
+
+function hasWon(playerFleet, enemyFleet){
+    var playerShipsSunk = playerFleet.filter(function(ship){
+        return ship.isSunk === true;
+    })
+    var enemyShipsSunk = enemyFleet.filter(function(ship){
+       return  ship.isSunk === true;
+    });
+    if (playerShipsSunk < enemyShipsSunk) return "won";
+    else if (playerShipsSunk > enemyShipsSunk) return "lost";
+    else if (playerShipsSunk === enemyShipsSunk) return "tied";
 }
 
 function setGamePlayEvents (gamePlayerId){
@@ -313,7 +326,7 @@ function createShips (gamePlayerId) {
 }
 
 function checkForUpdates(){
-    gamePlayerId = getParameterByName("gp");
+    var gamePlayerId = getParameterByName("gp");
     setInterval( function (){
         $.ajax({ url:"/api/game_view/" + gamePlayerId,
                 method:"GET",
@@ -333,7 +346,7 @@ function renderMainView (player, enemy){
 }
 
 function renderShipList(shipsAvailable) {
-    str="";
+    var str="";
     shipsAvailable.forEach(function(ship){
         str += "<li>" + ship.shipType + "</li>";
     });
@@ -341,17 +354,22 @@ function renderShipList(shipsAvailable) {
 }
 
 function renderShipStatusList(playerFleet) {
-    str="";
+    var str="";
+
     Object.keys(playerFleet).forEach(function(key){
          var ship = playerFleet[key];
          var status;
-         if (ship.isSunk == false){
+         var className;
+         if (ship.isSunk === false){
              status = "ok";
+             className = "";
          } else {
-             status ="sunk";
+             status ="X";
+             className = "sunk";
          }
-         str += "<li class=" + status + ">" + ship.type + ": " + status + "</li>";
+         str += "<li class=" + className + ">" + ship.type + ": " + status + "</li>";
      });
+
     return str;
  }
 
