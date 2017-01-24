@@ -237,7 +237,7 @@ public class SalvoController {
         return dto;
     }
 
-    private Map <String, Object> mapTurns( List <Salvo> salvoes){
+    private Map <String, Object> mapTurns( Set <Salvo> salvoes){
         Map<String, Object> dto = new LinkedHashMap<>();
 
         salvoes.forEach( salvo -> {

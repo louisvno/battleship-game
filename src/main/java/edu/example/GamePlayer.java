@@ -29,7 +29,7 @@ public class GamePlayer {
     private Set<Ship> fleet = new HashSet<>();
 
     @OneToMany(mappedBy="gamePlayer",fetch = FetchType.EAGER)
-    private List <Salvo> salvoes = new ArrayList<>();
+    private Set <Salvo> salvoes = new HashSet<>();
 
     private Date joinDate = new Date();
     public GamePlayer () {}
@@ -76,7 +76,7 @@ public class GamePlayer {
         this.fleet = fleet;
     }
 
-    public List<Salvo> getSalvoes() {
+    public Set<Salvo> getSalvoes() {
         return salvoes;
     }
 

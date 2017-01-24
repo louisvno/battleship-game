@@ -32,7 +32,7 @@ public class Player {
     private Set<GamePlayer> gamePlayers;
 
     @OneToMany(mappedBy="player", fetch=FetchType.EAGER)
-    private List <Score> scores;
+    private Set <Score> scores;
 
     public Player () {}
 
