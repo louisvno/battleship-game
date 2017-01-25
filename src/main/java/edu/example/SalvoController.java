@@ -160,16 +160,16 @@ public class SalvoController {
 
             if (bindingResult.hasErrors()) {
             return new ResponseEntity<>(makeErrorDTO(bindingResult.getFieldErrors()),FORBIDDEN);
-        }else{
-            //database validation
-            if(players.findByUserNameIgnoreCase(username) == null){
-                Player player = new Player (username,password);
-                players.save(player);
-                return new ResponseEntity(CREATED);
             } else {
-                return new ResponseEntity("username already exists",FORBIDDEN);
+                //database validation
+                if (players.findByUserNameIgnoreCase(username) == null){
+                    Player player = new Player (username,password);
+                    players.save(player);
+                    return new ResponseEntity(CREATED);
+                } else {
+                    return new ResponseEntity("username already exists",FORBIDDEN);
+                }
             }
-        }
     }
 
     /************
