@@ -8,14 +8,14 @@
  It is only used to change the export details, such as using /people instead of
  the default value of /persons. */
 
-package edu.example;
+package edu.example.repositories;
 
 /**
  * Created by louis on 12/5/2016.
  */
 
+        import edu.example.entities.Player;
         import org.springframework.data.jpa.repository.JpaRepository;
-        import org.springframework.data.repository.query.Param;
         import org.springframework.data.rest.core.annotation.RepositoryRestResource;
         import java.util.List;
 

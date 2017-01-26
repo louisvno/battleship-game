@@ -1,5 +1,7 @@
 package edu.example;
 
+import edu.example.entities.*;
+import edu.example.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -147,19 +149,19 @@ public class SalvoController {
 
         GamePlayer gamePlayer = gamePlayers.findOne(gamePlayerId);
         //check if gameplayer belongs to the player that logged in
-        if(gamePlayer.getPlayer().getUserName()== auth.getName())
+        if(gamePlayer.getPlayer().getUserName().equals(auth.getName()))
             return makeGameViewDTO(gamePlayer);
             else return new ResponseEntity(FORBIDDEN);
     }
 
     @RequestMapping(value = "/players", method=RequestMethod.POST)
-    public ResponseEntity <Object> addNewUser(@Valid PlayerForm playerForm,
-                                              BindingResult bindingResult,
-                                              @RequestParam("username") String username,
-                                              @RequestParam("password") String password){
+        public ResponseEntity <Object> addNewUser(@Valid PlayerForm playerForm,
+                BindingResult bindingResult,
+                @RequestParam("username") String username,
+                @RequestParam("password") String password){
 
             if (bindingResult.hasErrors()) {
-            return new ResponseEntity<>(makeErrorDTO(bindingResult.getFieldErrors()),FORBIDDEN);
+                return new ResponseEntity<>(makeErrorDTO(bindingResult.getFieldErrors()),FORBIDDEN);
             } else {
                 //database validation
                 if (players.findByUserNameIgnoreCase(username) == null){
@@ -175,6 +177,7 @@ public class SalvoController {
     /************
      *  Data transfer Objects
     *******/
+
     private Map<String, String> makeErrorDTO(List<FieldError> fieldErrors){
         Map<String, String> dto = new LinkedHashMap<>();
         fieldErrors.forEach(error ->

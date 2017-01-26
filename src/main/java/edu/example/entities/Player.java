@@ -1,14 +1,14 @@
 //"Domain object" to represent a player (object to store player data)
-package edu.example;
+package edu.example.entities;
 
 //Java Persistence API
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.FetchType;
-import java.util.List;
 import java.util.Set;
 
 /**

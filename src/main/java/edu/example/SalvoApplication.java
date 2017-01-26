@@ -1,5 +1,7 @@
 package edu.example;
 
+import edu.example.entities.*;
+import edu.example.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -42,6 +44,8 @@ public class SalvoApplication {
             ScoreRepository ScoreRepo) {
 
         return (args) -> {
+
+/*
             //create a few players
             Player p1 = new Player("Arnie", "Schwarz", "arnie1947", "terminator1");
             Player p2 = new Player("Silvester", "Stallone", "Rambo", "erm844");
@@ -175,83 +179,9 @@ public class SalvoApplication {
             ScoreRepo.save(score4);
             ScoreRepo.save(score5);
             ScoreRepo.save(score6);
-
+*/
         };
     }
-}
-
-@Configuration
-class WebSecurityConfiguration extends GlobalAuthenticationConfigurerAdapter {
-
-    @Autowired
-    PlayerRepository playerRepo;
-
-    @Override
-    public void init(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService());
-    }
-
-    @Bean
-    UserDetailsService userDetailsService() {
-        return new UserDetailsService() {
-
-            @Override
-            public UserDetails loadUserByUsername(String name) throws UsernameNotFoundException {
-                List<Player> players = playerRepo.findByUserName(name);
-                if (!players.isEmpty()) {
-                    Player player = players.get(0);
-                    return new User(player.getUserName(), player.getPassword(),
-                            AuthorityUtils.createAuthorityList("USER"));
-        } else {
-            throw new UsernameNotFoundException("Unknown user: " + name);
-        }
-    }
-        };
-    }
-}
-
-@EnableWebSecurity
-@Configuration
-class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable();
-
-        http.authorizeRequests()
-                .antMatchers("/api/players",
-                        "/api/games",
-                        "/games.html",
-                        "/styles/**",
-                        "/scripts/**",
-                        "/api/login")
-                .permitAll()
-                .anyRequest().authenticated()
-                .and()
-                .formLogin().loginPage("/api/login")
-                .and()
-                .logout().logoutUrl("/api/logout");
-
-        // if user is not authenticated, just send an authentication failure response
-        http.exceptionHandling().authenticationEntryPoint((req, res, exc) -> res.sendError(HttpServletResponse.SC_UNAUTHORIZED));
-
-        // if login is successful, just clear the flags asking for authentication
-        http.formLogin().successHandler((req, res, auth) -> clearAuthenticationAttributes(req));
-
-        // if login fails, just send an authentication failure response
-        http.formLogin().failureHandler((req, res, exc) -> res.sendError(HttpServletResponse.SC_UNAUTHORIZED));
-
-        // if logout is successful, just send a success response
-        http.logout().logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler());
-    }
-
-    private void clearAuthenticationAttributes(HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-        if (session != null) {
-            session.removeAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
-        }
-    }
-
 }
 
 

@@ -1,9 +1,7 @@
-package edu.example;
+package edu.example.entities;
 
 import javax.persistence.*;
 import java.util.*;
-
-import static java.util.stream.Collectors.toList;
 
 /**
  * Created by louis on 12/13/2016.
@@ -18,11 +16,11 @@ public class GamePlayer {
     private long id;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="player")
+    @JoinColumn(name="player_id")
     private Player player;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="game")
+    @JoinColumn(name="game_id")
     private Game game;
 
     @OneToMany(mappedBy="gamePlayer",fetch = FetchType.EAGER)
