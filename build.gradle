@@ -10,29 +10,38 @@ buildscript {
 	}
 }
 
-apply plugin: 'java'
-apply plugin: 'eclipse'
-apply plugin: 'org.springframework.boot'
+	apply plugin: 'java'
+	apply plugin: 'eclipse'
+	apply plugin: 'org.springframework.boot'
 
-jar {
-	baseName = 'salvo'
-	version = '0.0.1-SNAPSHOT'
-}
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+	jar {
+		baseName = 'salvo'
+		version = '0.0.1-SNAPSHOT'
+	}
+	sourceCompatibility = 1.8
+	targetCompatibility = 1.8
 
-repositories {
+	repositories {
 	mavenCentral()
 }
 bootRun {
+	// Assign all Java system properties from
+	// the command line to the JavaExec task.
+	//systemProperties System.properties
 	addResources = true
 }
+
+task stage(dependsOn: ['build', 'clean'])
+build.mustRunAfter clean
+
 
 dependencies {
 	compile('org.springframework.boot:spring-boot-starter-data-jpa')
 	compile('org.springframework.boot:spring-boot-starter-data-rest')
 	compile('org.springframework.boot:spring-boot-starter-web')
 	compile("org.springframework.boot:spring-boot-starter-security")
-	runtime('com.h2database:h2')
+	compile('org.postgresql:postgresql:9.4-1203-jdbc42')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 }
+//runtime('mysql:mysql-connector-java')
+//runtime('com.h2database:h2')

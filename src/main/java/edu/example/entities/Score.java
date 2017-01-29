@@ -1,4 +1,7 @@
-package edu.example;
+package edu.example.entities;
+
+import edu.example.entities.Game;
+import edu.example.entities.Player;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -15,11 +18,11 @@ public class Score {
     private long id;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="game")
+    @JoinColumn(name="game_id")
     private Game game;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="player")
+    @JoinColumn(name="player_id")
     private Player player;
 
     private double score;

@@ -1,4 +1,6 @@
-package edu.example;
+package edu.example.entities;
+
+import edu.example.entities.GamePlayer;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -18,7 +20,7 @@ public class Salvo {
     private List <String> targets; //every salvo can have 2 targets
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="game_player")
+    @JoinColumn(name="game_player_id")
     private GamePlayer gamePlayer;
     private Integer turn;
 

@@ -1,4 +1,6 @@
-package edu.example;
+package edu.example.entities;
+
+import edu.example.entities.GamePlayer;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -16,7 +18,7 @@ public class Ship {
     private String shipType;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="game_player")
+    @JoinColumn(name="game_player_id")
     private GamePlayer gamePlayer;
 
     @ElementCollection

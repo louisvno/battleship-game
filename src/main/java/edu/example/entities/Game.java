@@ -1,4 +1,4 @@
-package edu.example;
+package edu.example.entities;
 
 /**
  * Created by louis on 12/7/2016.
