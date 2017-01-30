@@ -29,7 +29,6 @@ function loadGames(){
              dataType: "json",
              success: function (data) {
                     renderGamesList(data);
-
                     setUserInfo(data.currentPlayer);
                     viewController(data.currentPlayer)
 
@@ -55,7 +54,7 @@ function addGames(data){
                        addPlayers(game) +
                       "<li>created:"+ new Date(game.created) + "</li>" +
                    "</ul>" +
-                   addJoinButton(game) +
+                   addJoinButton(game, data.currentPlayer) +
                    addContinueGameButton(game,data.currentPlayer) +
               "</div>";
     });
@@ -66,7 +65,7 @@ function addContinueGameButton(game,currentPlayer){
         var gamePlayerIds = Object.keys(game.gamePlayers);
         var str="";
 
-        if(currentPlayer && gamePlayerIds.length === 2 ){
+        if(currentPlayer && gamePlayerIds.length === 2 || currentPlayer.id === game.gamePlayers[gamePlayerIds[0]].player.id ){
              gamePlayerIds.forEach(function(id){
                 if(game.gamePlayers[id].player["id"] === currentPlayer.id){
                     str = "<a href='game.html?gp=" + id + "'" + " class='join-button'>Continue Game</a>";
@@ -75,13 +74,13 @@ function addContinueGameButton(game,currentPlayer){
         return str;
  }
 
-function addJoinButton(game){
+function addJoinButton(game, currentPlayer){
      var ids = Object.keys(game.gamePlayers);
-     if (ids.length < 2 ){
+     if (ids.length < 2 && currentPlayer.id != game.gamePlayers[ids[0]].player.id){
          return "<button data-gameid=" + game.id +" class='join-button'>Join Game</button>";
      } else
      return "";
- }
+}
 
 function addPlayers (game){
     var str = "";
