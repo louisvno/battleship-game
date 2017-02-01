@@ -59,6 +59,11 @@ h2 {
     color:orange;
 }
 
+h3 {
+    font-family: sans-serif;
+    color:orange;
+}
+
 table {
     empty-cells: show;
     table-layout: fixed;
@@ -175,12 +180,12 @@ td.targeted {
 }
 
 button{
-    display:block;
+    display:inline-block;
     border:0px;
     height:36px;
     min-width: 60px;
     border-radius:2px;
-    margin-top:10px;
+    margin:10px;
 }
 
 .disabled{
@@ -238,6 +243,12 @@ button.active:hover{
     justify-content:center;
 }
 
+.login-container{
+    width:300px;
+    margin:auto;
+    text-align:center;
+}
+
 .orange-display li{
   margin-top:2px;
 }
@@ -245,6 +256,13 @@ button.active:hover{
 .orange-display li.sunk{
   color: #996300;
 }
+
+input{
+    display:inline-block;
+    width:200px;
+    height:30px;
+    margin-top: 10px;
+ }
 
 @media (max-width: 960px) {
    table{  width: 300px;

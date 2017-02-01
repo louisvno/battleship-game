@@ -13,43 +13,50 @@
 
     <!--</script>-->
 </head>
+
 <body>
+
     <section id="player-info">
 
-    </section>
-
-    <section id="login">
-        <form action="" id="login-form" method="POST">
-            <input type="text" name="username" placeholder="Username">
-            <input type="password" name="password" placeholder="Password">
-        </form>
-
-        <button type="submit" form="login-form">Login</button>
     </section>
 
     <section id="logout">
         <button id="logout-button">Log out</button>
     </section>
 
-    <section id="signup">
-        <form name="signupform" id="signup-form" action="http://localhost:8080/api/players" method="POST">
-            <label for="first-name"></label>
-            <input type="text" id="first-name" name="firstname" placeholder="First name">
-            <input type="text" id="last-name" name="lastname" placeholder="Last name">
-            <input type="text" id="username" name="username" placeholder="Username">
-            <input type="password" id="password" name="password" placeholder="Password">
-            <input type="password" id="password-check" name="passwordcheck" placeholder="Type Password again">
-        </form>
+    <div class="login-container">
+        <section id="login">
 
-        <button type="submit" form="signup-form">Sign up</button>
-    </section>
-    <section id="games-list">
+            <form action="" id="login-form" method="POST">
+                <fieldname><h3>Login to your account</h3></fieldname>
+                <input class="orange-display" type="text" name="username" placeholder="Username">
+                <input class="orange-display" type="password" name="password" placeholder="Password">
+            </form>
+
+            <button type="submit" form="login-form">Login</button>
+        </section>
 
 
-        <!--list of games-->
-    </section>
-    <button id="new-game">New Game</button>
-    <script src="/scripts/games.js"></script>
-    <!--<script src="/scripts/formValidation.js"></script>-->
+
+        <section id="signup">
+            <fieldname><h3>Create a new account</h3></fieldname>
+            <form name="signupform" id="signup-form" action="http://localhost:8080/api/players" method="POST">
+                <input class="orange-display" type="text" id="username" name="username" placeholder="Username">
+                <input class="orange-display" type="password" id="password" name="password" placeholder="Password">
+                <input class="orange-display" type="password" id="password-check" name="passwordcheck" placeholder="Type Password again">
+            </form>
+
+            <button type="submit" form="signup-form">Sign up</button>
+        </section>
+    </div>
+
+        <section id="games-list">
+            <!--list of games-->
+        </section>
+
+        <button id="new-game">New Game</button>
+
+        <script src="/scripts/games.js"></script>
+        <!--<script src="/scripts/formValidation.js"></script>-->
 </body>
 </html>
