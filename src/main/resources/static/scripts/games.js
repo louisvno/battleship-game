@@ -2,23 +2,25 @@ $(function(){
     loadGames()
 });
 
-function viewController(currentPlayer){
-    if(currentPlayer){
+function viewController(data){
+    if(data.currentPlayer){
+             renderGamesList(data);
          //hide
-             $("#login").hide();
-             $("#signup").hide();
+             $(".login-container").hide();
          //show
              $(".join-button").show();
-             $("#logout").show();
+             $("#logout-button").show();
              $("#new-game").show();
+         }
 
-         } else {
+         else {
          //hide
-              $(".join-button").hide();
+              setLoginButtonEvents();
+              //$(".join-button").hide();
               $("#player-info").hide();
               $("#new-game").hide();
-              $("#new-game").hide();
-              $("#logout").hide();
+              $("#logout-button").hide();
+              $("#games-list").hide();
          }
 }
 
@@ -27,10 +29,7 @@ function loadGames(){
              url: "/api/games",
              dataType: "json",
              success: function (data) {
-                    renderGamesList(data);
-                    setUserInfo(data.currentPlayer);
-                    viewController(data.currentPlayer)
-
+                      viewController(data)
              },
              error: function (){
                $('#games-list').html('<span>Games list unavailable</span>');
@@ -40,7 +39,7 @@ function loadGames(){
 
 function renderGamesList(data){
     $('#games-list').html(addGames(data));
-    setButtonEvents();
+    setJoinButtonEvent();
 }
 
 function addGames(data){
@@ -98,12 +97,36 @@ function setUserInfo(currentPlayer){
     };
 }
 
-$(document).on('submit', '#login-form', function(e) {
-   e.preventDefault();
-    var username = $(this).find('input[name="username"]').val();
-    var password = $(this).find('input[name="password"]').val();
-    login (username,password);
-});
+function setLoginButtonEvents(){
+
+    $(document).on('submit', '#login-form', function(e) {
+       e.preventDefault();
+        var username = $(this).find('input[name="username"]').val();
+        var password = $(this).find('input[name="password"]').val();
+        login (username,password);
+    });
+
+    $(document).on('submit', '#signup-form', function(e) {
+        e.preventDefault();
+        var username = $(this).find('input[name="username"]').val();
+        var password = $(this).find('input[name="password"]').val();
+        $.ajax({ method:"POST",
+                    url: "/api/players",
+                    data: {
+                           username: username,
+                           password: password,
+    //                       firstname: values.firstname,
+    //                       lastname: values.lastname
+                           },
+                    dataType: "json",
+                    statusCode: {201: function() {
+                                    console.log("Username:" + username);
+                                    login (username,password);
+                                }
+                    }
+        });
+    });
+}
 
 function login (username, password){
     $.ajax({ method:"POST",
@@ -115,27 +138,6 @@ function login (username, password){
                   }
            });
 }
-
-$(document).on('submit', '#signup-form', function(e) {
-    e.preventDefault();
-    var username = $(this).find('input[name="username"]').val();
-    var password = $(this).find('input[name="password"]').val();
-    $.ajax({ method:"POST",
-                url: "/api/players",
-                data: {
-                       username: username,
-                       password: password,
-//                       firstname: values.firstname,
-//                       lastname: values.lastname
-                       },
-                dataType: "json",
-                statusCode: {201: function() {
-                                console.log("Username:" + username);
-                                login (username,password);
-                            }
-                }
-    });
-});
 
 $("#logout-button").click( function(e) {
     e.preventDefault();
@@ -149,17 +151,17 @@ $("#logout-button").click( function(e) {
 });
 
 $("#new-game").click( function(e) {
-    e.preventDefault();
-    $.ajax({
-        method:"POST",
-        url: "/api/games",
-        dataType: "json",
-        statusCode: {201: function(response) {window.location="/game.html?gp="+ response.id;}
-        }
-    });
-});
+        e.preventDefault();
+        $.ajax({
+            method:"POST",
+            url: "/api/games",
+            dataType: "json",
+            statusCode: {201: function(response) {window.location="/game.html?gp="+ response.id;}
+            }
+        });
+ });
 
-function setButtonEvents(){
+function setJoinButtonEvent(){
     $("button.join-button").on("click", function(e) {
         e.preventDefault();
         var gameId = e.target.getAttribute("data-gameId");

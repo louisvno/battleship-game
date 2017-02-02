@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <title>Games</title>
     <link rel="stylesheet" href="styles/styles.css">
+    <link rel="stylesheet" type="text/css"
+          href="https://fonts.googleapis.com/css?family=Orbitron">
     <script
             src="https://code.jquery.com/jquery-3.1.1.min.js"
             integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
@@ -15,13 +17,13 @@
 </head>
 
 <body>
+    <header>
+        <h1>Salvo</h1>
+        <button id="logout-button" class="active">Log out</button>
+    </header>
 
     <section id="player-info">
 
-    </section>
-
-    <section id="logout">
-        <button id="logout-button">Log out</button>
     </section>
 
     <div class="login-container">
@@ -33,10 +35,8 @@
                 <input class="orange-display" type="password" name="password" placeholder="Password">
             </form>
 
-            <button type="submit" form="login-form">Login</button>
+            <button class="active" type="submit" form="login-form">Login</button>
         </section>
-
-
 
         <section id="signup">
             <fieldname><h3>Create a new account</h3></fieldname>
@@ -46,17 +46,19 @@
                 <input class="orange-display" type="password" id="password-check" name="passwordcheck" placeholder="Type Password again">
             </form>
 
-            <button type="submit" form="signup-form">Sign up</button>
+            <button class="active" type="submit" form="signup-form">Sign up</button>
         </section>
     </div>
 
-        <section id="games-list">
+    <div class="gameslist-container" class="orange-display">
+        <section id="games-list" class="orange-display">
             <!--list of games-->
         </section>
 
-        <button id="new-game">New Game</button>
+        <button id="new-game" class="active">New Game</button>
+    </div>
 
-        <script src="/scripts/games.js"></script>
-        <!--<script src="/scripts/formValidation.js"></script>-->
+    <script src="/scripts/games.js"></script>
+    <!--<script src="/scripts/formValidation.js"></script>-->
 </body>
 </html>

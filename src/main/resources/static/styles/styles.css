@@ -1,270 +1,331 @@
 /* http://meyerweb.com/eric/tools/css/reset/
-   v2.0 | 20110126
-   License: none (public domain)
-*/
+    v2.0 | 20110126
+    License: none (public domain)
+ */
 
-html, body, div, span, applet, object, iframe,
-h1, h2, h3, h4, h5, h6, p, blockquote, pre,
-a, abbr, acronym, address, big, cite, code,
-del, dfn, em, img, ins, kbd, q, s, samp,
-small, strike, strong, sub, sup, tt, var,
-b, u, i, center,
-dl, dt, dd, ol, ul, li,
-fieldset, form, label, legend,
-table, caption, tbody, tfoot, thead, tr, th, td,
-article, aside, canvas, details, embed,
-figure, figcaption, footer, header, hgroup,
-menu, nav, output, ruby, section, summary,
-time, mark, audio, video {
-	margin: 0;
-	padding: 0;
-	border: 0;
-	font-size: 100%;
-	font: inherit;
-	vertical-align: baseline;
-}
-/* HTML5 display-role reset for older browsers */
-article, aside, details, figcaption, figure,
-footer, header, hgroup, menu, nav, section {
-	display: block;
-}
-body {
-	line-height: 1;
-}
-ol, ul {
-	list-style: none;
-}
-blockquote, q {
-	quotes: none;
-}
-blockquote:before, blockquote:after,
-q:before, q:after {
-	content: '';
-	content: none;
-}
-table {
-	border-collapse: collapse;
-	border-spacing: 0;
-}
-
-/* end of reset */
-
-body{
-    background-color: rgb(51, 51, 51);
-    font-family: 'Orbitron';
-}
-
-h2 {
-    font-weight:normal;
-    color:orange;
-}
-
-h3 {
-    font-family: sans-serif;
-    color:orange;
-}
-
-table {
-    empty-cells: show;
-    table-layout: fixed;
-    width:400px;
-    height:400px;
-    background: rgb(82,177,82); /* Old browsers */
-    background: -moz-radial-gradient(center, ellipse cover, rgba(82,177,82,1) 14%, rgba(0,138,0,1) 67%, rgba(0,87,0,1) 83%, rgba(0,36,0,1) 100%); /* FF3.6-15 */
-    background: -webkit-radial-gradient(center, ellipse cover, rgba(82,177,82,1) 14%,rgba(0,138,0,1) 67%,rgba(0,87,0,1) 83%,rgba(0,36,0,1) 100%); /* Chrome10-25,Safari5.1-6 */
-    background: radial-gradient(ellipse at center, rgba(82,177,82,1) 14%,rgba(0,138,0,1) 67%,rgba(0,87,0,1) 83%,rgba(0,36,0,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-}
-
-td {
-
-   border: 1px solid black;
-   color: black;
-}
-
-th {
-    font-family: 'Orbitron';
-    color: #009900;
-    text-shadow: 1px 1px 2px #008000;
-    background: rgb(51, 51, 51);
+ html, body, div, span, applet, object, iframe,
+ h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+ a, abbr, acronym, address, big, cite, code,
+ del, dfn, em, img, ins, kbd, q, s, samp,
+ small, strike, strong, sub, sup, tt, var,
+ b, u, i, center,
+ dl, dt, dd, ol, ul, li,
+ fieldset, form, label, legend,
+ table, caption, tbody, tfoot, thead, tr, th, td,
+ article, aside, canvas, details, embed,
+ figure, figcaption, footer, header, hgroup,
+ menu, nav, output, ruby, section, summary,
+ time, mark, audio, video {
+ 	margin: 0;
+ 	padding: 0;
+ 	border: 0;
+ 	font-size: 100%;
+ 	font: inherit;
+ 	vertical-align: baseline;
+ }
+ /* HTML5 display-role reset for older browsers */
+ article, aside, details, figcaption, figure,
+ footer, header, hgroup, menu, nav, section {
+ 	display: block;
+ }
+ body {
+ 	line-height: 1;
+ }
+ ol, ul {
+ 	list-style: none;
+ }
+ blockquote, q {
+ 	quotes: none;
+ }
+ blockquote:before, blockquote:after,
+ q:before, q:after {
+ 	content: '';
+ 	content: none;
+ }
+ table {
+ 	border-collapse: collapse;
+ 	border-spacing: 0;
  }
 
-tr {
+ /* end of reset */
 
-}
+ body{
+     background-color: rgb(51, 51, 51);
+     font-family: 'Orbitron';
+ }
 
-td:last-of-type{
-   border-right:  1px solid #194d19;
-}
+ h1 {
+     color:orange;
+     font-family: 'Orbitron';
+     font-size: 36px;
+     padding:5px;
+ }
 
-td:first-of-type{
-   border-left: 1px solid #003300;
-}
+ h2 {
+     font-weight:normal;
+     color:orange;
+ }
 
-tr:last-of-type td{
-   border-bottom:  1px solid #194d19;
-}
+ h3 {
+     font-family: sans-serif;
+     color:orange;
+ }
 
-tr:nth-of-type(2) td{
-   border-top: 1px solid #003300;
-}
+ table {
+     empty-cells: show;
+     table-layout: fixed;
+     width:400px;
+     height:400px;
+     background: rgb(82,177,82); /* Old browsers */
+     background: -moz-radial-gradient(center, ellipse cover, rgba(82,177,82,1) 14%, rgba(0,138,0,1) 67%, rgba(0,87,0,1) 83%, rgba(0,36,0,1) 100%); /* FF3.6-15 */
+     background: -webkit-radial-gradient(center, ellipse cover, rgba(82,177,82,1) 14%,rgba(0,138,0,1) 67%,rgba(0,87,0,1) 83%,rgba(0,36,0,1) 100%); /* Chrome10-25,Safari5.1-6 */
+     background: radial-gradient(ellipse at center, rgba(82,177,82,1) 14%,rgba(0,138,0,1) 67%,rgba(0,87,0,1) 83%,rgba(0,36,0,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+ }
 
-td.ship {
-    background-color:#00EF3B;
-}
+ td {
 
-td.ship.hit {
-    background-color:rgb(255, 48, 48);
-}
+    border: 1px solid black;
+    color: black;
+ }
 
-td.missed {
-   background-color:blue;
-}
+ th {
+     font-family: 'Orbitron';
+     color: #009900;
+     text-shadow: 1px 1px 2px #008000;
+     background: rgb(51, 51, 51);
+  }
 
-td.temp-ship{
+ tr {
+
+ }
+
+ td:last-of-type{
+    border-right:  1px solid #194d19;
+ }
+
+ td:first-of-type{
+    border-left: 1px solid #003300;
+ }
+
+ tr:last-of-type td{
+    border-bottom:  1px solid #194d19;
+ }
+
+ tr:nth-of-type(2) td{
+    border-top: 1px solid #003300;
+ }
+
+ td.ship {
+     background-color:#00EF3B;
+ }
+
+ td.ship.hit {
+     background-color:rgb(255, 48, 48);
+ }
+
+ td.missed {
     background-color:blue;
-}
-
-td.targeted {
-   background-color:orange;
-}
-
-
-
-.display-header{
-    color:rgb(191, 191, 191);
-    padding-top:10px;
-    padding-bottom:10px;
-    text-align:center;
-}
-
-
-#game-info {
-    color:white;
-    font-size: 22px;
-}
-
-#info{
- color:rgb(191, 191, 191);
-}
-
-/*#ship-list li:first-of-type{
-    background-color:#805300;
-}*/
-
-#game-notifications{
-      text-align:center;
-      width:50%;
-      height:40px;
-      margin:auto;
-
-}
-
-#left-side-display{
-    box-sizing: border-box;
-    height:400px;
-    width:20%;
-    padding: 5px;
-    max-width:200px;
-}
-#left-side-display .orange-display{
-    height:400px;
-}
-
-#right-side-display .orange-display{
-    height:400px;
-}
-
-#fleet {
-    box-sizing: border-box;
-    padding: 5px;
-}
-
-button{
-    display:inline-block;
-    border:0px;
-    height:36px;
-    min-width: 60px;
-    border-radius:2px;
-    margin:10px;
-}
-
-.disabled{
-    background-color: rgb(191, 191, 191);
-}
-
-.active{
-   background-color: rgb(209, 37, 37);
-   -webkit-box-shadow: 1px 1px 2px 0px rgba(0,0,0,0.75);
-   -moz-box-shadow: 1px 1px 2px 0px rgba(0,0,0,0.75);
-   box-shadow: 1px 1px 2px 0px rgba(0,0,0,0.75);
-}
-
-.orange-display{
-  color:orange;
-  box-sizing:border-box;
-  padding:5px;
-  border-radius:2px;
-  background-color:rgb(102, 66, 0);
-  border-right: 1px solid  #4d3200;
-  border-bottom: 1px solid  #4d3200;
-  border-left: 1px solid #1a1100;
-  border-top: 1px solid #1a1100;
-}
-
-button.active:hover{
-    background-color: rgb(255, 48, 48);
-}
-
-#battlefield{
-    box-sizing: border-box;
-    padding: 5px;
-}
-
-#battlefield-display.off{
-    background: rgb(0,0,0);
-}
-
-#right-side-display{
-    box-sizing: border-box;
-    max-width:200px;
-    padding: 5px;
-}
-#switch-orientation{
-    background-color:#805300;
-    margin-top:10px;
-}
-
-#switch-orientation label{
-   display:block;
-}
-
-.flex-container{
-    display: flex;
-    justify-content:center;
-}
-
-.login-container{
-    width:300px;
-    margin:auto;
-    text-align:center;
-}
-
-.orange-display li{
-  margin-top:2px;
-}
-
-.orange-display li.sunk{
-  color: #996300;
-}
-
-input{
-    display:inline-block;
-    width:200px;
-    height:30px;
-    margin-top: 10px;
  }
 
-@media (max-width: 960px) {
-   table{  width: 300px;
-    height:300px;}
-}
+ td.temp-ship{
+     background-color:blue;
+ }
+
+ td.targeted {
+    background-color:orange;
+ }
+
+ .display-header{
+     color:rgb(191, 191, 191);
+     padding-top:10px;
+     padding-bottom:10px;
+     text-align:center;
+ }
+
+ #game-info {
+     color:white;
+     font-size: 22px;
+ }
+
+ #info{
+  color:rgb(191, 191, 191);
+ }
+
+ /*#ship-list li:first-of-type{
+     background-color:#805300;
+ }*/
+
+ #game-notifications{
+       text-align:center;
+       width:50%;
+       height:40px;
+       margin:auto;
+
+ }
+
+ #left-side-display{
+     box-sizing: border-box;
+     height:400px;
+     width:20%;
+     padding: 5px;
+     max-width:200px;
+ }
+ #left-side-display .orange-display{
+     height:400px;
+ }
+
+ #right-side-display .orange-display{
+     height:400px;
+ }
+
+ #fleet {
+     box-sizing: border-box;
+     padding: 5px;
+ }
+
+ button{
+     display:inline-block;
+     border:0px;
+     height:36px;
+     min-width: 60px;
+     border-radius:2px;
+     margin:10px;
+ }
+
+ .disabled{
+     background-color: rgb(191, 191, 191);
+ }
+
+ .active{
+    background-color: rgb(209, 37, 37);
+    -webkit-box-shadow: 1px 1px 2px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: 1px 1px 2px 0px rgba(0,0,0,0.75);
+    box-shadow: 1px 1px 2px 0px rgba(0,0,0,0.75);
+ }
+
+ .orange-display{
+   color:orange;
+   box-sizing:border-box;
+   padding:5px;
+   border-radius:2px;
+   background-color:rgb(102, 66, 0);
+   border-right: 1px solid  #4d3200;
+   border-bottom: 1px solid  #4d3200;
+   border-left: 1px solid #1a1100;
+   border-top: 1px solid #1a1100;
+ }
+
+ button.active:hover{
+     background-color: rgb(255, 48, 48);
+ }
+
+ #battlefield{
+     box-sizing: border-box;
+     padding: 5px;
+ }
+
+ #battlefield-display.off{
+     background: rgb(0,0,0);
+ }
+
+ #right-side-display{
+     box-sizing: border-box;
+     max-width:200px;
+     padding: 5px;
+ }
+ #switch-orientation{
+     background-color:#805300;
+     margin-top:10px;
+ }
+
+ #switch-orientation label{
+    display:block;
+ }
+
+ .flex-container{
+     display: flex;
+     justify-content:center;
+ }
+
+ .login-container{
+     width:300px;
+     margin:auto;
+     text-align:center;
+     padding-top:10px;
+ }
+
+ .orange-display li{
+   margin-top:2px;
+ }
+
+ .orange-display li.sunk{
+   color: #996300;
+ }
+
+ input[type=text],input[type=password]{
+     display:inline-block;
+     width:200px;
+     height:30px;
+     margin-top: 10px;
+  }
+
+ header{
+     display:flex;
+     justify-content:space-between;
+     background-color:rgb(77, 77, 77);
+     box-shadow:0px 1px 2px rgba(0,0,0,0.5);
+     height:50px;
+ }
+
+ .gameslist-container{
+     max-width:600px;
+     margin:auto;
+ }
+ #games-list{
+     margin-top: 60px;
+     max-width:600px;
+     padding-top:10px;
+     max-height:70vh;
+     overflow:auto;
+ }
+ .game-card{
+     box-sizing:border-box;
+     font-family:sans-serif;
+     padding:5px;
+     background-color: #996300;
+     /*box-shadow:0px 1px 2px rgba(0,0,0,0.5);*/
+     margin-top:10px;
+     color:orange;
+ }
+
+ .join-button {
+     display:inline-block;
+     background-color: transparent;
+     color:orange;
+     border:1px solid orange;
+     height:36px;
+     min-width: 60px;
+     border-radius:2px;
+     margin:10px;
+     font-family:sans-serif;
+     text-decoration:none;
+     padding:10px;
+     box-sizing:border-box;
+     font-size:14px;
+ }
+
+ a.join-button:hover{
+    background-color:
+ 	 #cc8500;
+ }
+
+ button.join-button:hover{
+    background-color:
+ 	 #cc8500;
+     cursor: pointer;
+ }
+
+ @media (max-width: 960px) {
+            table{  width: 300px;
+     height:300px;}
+ }
