@@ -9,6 +9,7 @@ import java.util.List;
 /**
  * Created by louis on 12/15/2016.
  */
+
 @Entity
 public class Ship {
 

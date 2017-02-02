@@ -98,13 +98,4 @@ public class GamePlayer {
         this.salvoes.add(salvo);//add salvo to gameplayer salvoes
     }
 
-
-//TODO ask Ferran for alternative method to connect gameplayer and fleet
-    //Alternative: let database arrange relation between ship and GP,
-    // add Gameplayer to ship when creating a new ship
-//    public void addShip(Ship ship) {
-//        ship.setGamePlayer(this); //assign gameplayer to ship
-//        //this.fleet.add(ship); //add ship to fleet
-//    }
-
 }

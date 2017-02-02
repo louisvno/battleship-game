@@ -419,27 +419,31 @@ public class SalvoController {
                 .allMatch(loc -> targets.contains(loc)); //if all ship loc match a target the ship was sunk
     }
 
-    //Gamestates 0= actions allowed 1= wait for other player 2=game over (no more salvoes allowed)
-    private int getGameState(GamePlayer gamePlayer){
+    /**
+     * Gamestates
+     * 0 = ready to shoot salvo
+     * 1 = wait for other player
+     * 2 = game over (no more salvoes allowed)
+     */
 
+    private int getGameState(GamePlayer gamePlayer){
         GamePlayer enemy = getEnemy(gamePlayer);
         if (enemy != null) {
             //if enemyships have not been placed yet > wait 1
             if (enemy.getFleet().isEmpty()) return 1;
-                //if enemy destroyed your ships you might have one turn left
-            else if (enemy.getLastTurn() < gamePlayer.getLastTurn()) return 1;
-                //if enemy has destroyed all your ships and turns are equal you are also game over
-            else if (hasWon(enemy) || hasWon(gamePlayer) &&
-                        enemy.getLastTurn() == gamePlayer.getLastTurn()) {
-                //only if scores have not been set before do
+            //if enemy has destroyed all your ships and turns are equal you are also game over
+            else if (hasWon(enemy) || hasWon(gamePlayer) && enemy.getLastTurn() == gamePlayer.getLastTurn()) {
+                //only if scores have not been set before, do so
                 if(gamePlayer.getGame().getScores().isEmpty()){
                     setScores(gamePlayer);
-                    return 2;
-                }else return 2;
-            }else return 0;
-
-        }else if (enemy == null && gamePlayer.getFleet().isEmpty() == false) return 1;
-        else return 0;
+                }
+                return 2;
+            }
+            //else you are allowed to play whenever turn is 1 less than enemy
+            else if (enemy.getLastTurn() < gamePlayer.getLastTurn()) return 1;
+            else return 0;
+        }
+        else return 1;
     }
 
     private boolean hasWon(GamePlayer gamePlayer){

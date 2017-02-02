@@ -1,4 +1,3 @@
-//TODO hide join button if player is already in game
 $(function(){
     loadGames()
 });
