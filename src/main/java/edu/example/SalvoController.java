@@ -448,9 +448,11 @@ public class SalvoController {
 
     private boolean hasWon(GamePlayer gamePlayer){
         List <String> allTargets = getAllSalvoTargets(gamePlayer);
-
-        return getAllShipLocations(getEnemy(gamePlayer)).stream()
-                .allMatch(loc -> allTargets.contains(loc));
+        if (!allTargets.isEmpty()) {
+            return getAllShipLocations(getEnemy(gamePlayer)).stream()
+                    .allMatch(loc -> allTargets.contains(loc));
+        }
+        else return false;
     }
 
     private void setScores(GamePlayer gamePlayer){
